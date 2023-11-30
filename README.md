@@ -3,5 +3,5 @@
 
 Şu an sadece dirvers.py dosyası sayesinde "http://127.0.0.1:5000/drivers" benzeri url ye gidince tabloyu bastırıyor.
 
-main.py dosyası kullanıkmayacak, flask olmadan veritabanını test etmek istersek diye onu da silmedim.
+main.py dosyası kullanılmayacak, flask olmadan veritabanını test etmek istersek diye onu da silmedim.
 
