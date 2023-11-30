@@ -14,5 +14,5 @@ def index():
         ' FROM drivers d'
         ' ORDER BY driverId'
     ).fetchall()
-    print(posts[0])
+    print(posts[0]) # test amaçlı
     return render_template('drivers.html', posts=posts)
