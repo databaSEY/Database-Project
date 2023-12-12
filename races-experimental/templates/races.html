@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formula 1 Search</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        a, button {
+            text-decoration: none;
+            color: #007bff;
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .details {
+        background-color: #f9f9f9; /* Set a background color for the details row */
+        border-top: 2px solid #ddd; /* Add a top border to separate it visually from the main row */
+        }
+
+        .details td {
+            padding: 10px; /* Add padding to the cells in the details row */
+        }
+        .map-container {
+            height: 200px;
+            width: 200px;
+        }
+        .img-container {
+            height: 200px;
+            width: 200px;
+        }
+        .leaflet-control-container {
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <h1>Formula 1 Search</h1>
+
+    <form action="/" method="get">
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search" value="{{ search_term }}">
+        
+        <button type="button" onclick="toggleAdvancedSearch()">Advanced Search</button>
+
+        <div id="advanced-search" style="display: none;">
+            <label for="year">Year:</label>
+            <select id="year" name="year">
+                <option value="" {% if not selected_year %}selected{% endif %}>All</option>
+                {% for year in distinct_years %}
+                    <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+    
+            <label for="country">Country:</label>
+            <select id="country" name="country">
+                <option value="" {% if not selected_country %}selected{% endif %}>All</option>
+                {% for country in distinct_countries %}
+                    <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>{{ country }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <button type="submit">Search</button>
+    </form>
+    <script>
+    
+        function toggleAdvancedSearch() {
+            var advancedSearchDiv = document.getElementById("advanced-search");
+            advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
+        }
+    
+        function saveAdvancedSearchState() {
+            var advancedSearchDiv = document.getElementById("advanced-search");
+            var isVisible = (advancedSearchDiv.style.display === "block");
+            localStorage.setItem("advanced_search_visible", isVisible);
+        }
+    
+        // Restore advanced search state on page load
+        window.onload = function() {
+            var storedState = localStorage.getItem("advanced_search_visible");
+            if (storedState === "true") {
+                document.getElementById("advanced-search").style.display = "block";
+            }
+        };
+        function toggleDetails(index) {
+            var detailsRow = document.getElementById("details-" + index);
+            detailsRow.style.display = (detailsRow.style.display === 'none') ? '' : 'none';
+        }
+       
+        function map_ltln(lat, lon, mapId) {
+        // Initialize the map with a unique ID5
+        var map = L.map(mapId).setView([lat, lon], 12)
+        // Add a tile layer (you can choose different providers)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+                
+        // Add a marker at the specified coordinates
+        L.marker([lat, lon]).addTo(map);
+    }
+
+    </script>
+    {% if search_term %}
+    {% if results %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Year</th>
+                <th>Circuit Name</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <td onclick="toggleDetails({{ loop.index }})">{{ result[0] }}</td>
+                    <td>{{ result[1] }}</td>
+                    <td>{{ result[2] }}</td>
+                    <td>{{ result[3] }}</td>
+                    
+                </tr>
+                <tr id="details-{{ loop.index }}" class="details" style="display: none;">
+                            <!-- Details content goes here -->
+                            <td>Details</td> <!-- Year -->
+                            
+                            <td>{{ result[1] }}</td> <!-- Year -->
+                            <td>{{ result[2] }}
+                            </td>
+                            <td><div id="map-{{ loop.index }}" class="map-container" ></div>
+                                <script>
+                                    // Call the function with specific latitude and longitude values
+                                    map_ltln({{ result[4] }}, {{ result[5] }}, "map-{{ loop.index }}");
+                                </script>
+                            </td> 
+                            
+                            <!-- Add more details as needed -->
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+
+        {% if page > 10 %}
+            <a href="?search={{ search_term }}&page={{ page - 10 }}">Previous 10</a>
+        {% endif %}
+
+        {% if page > 1 %}
+            <a href="?search={{ search_term }}&page={{ page - 1 }}">Previous</a>
+        {% endif %}
+
+        {% set start_page = page - 5 if page - 5 > 0 else 1 %}
+        {% set end_page = start_page + 9 %}
+
+        {% for i in range(start_page, end_page + 1) %}
+            {% if i == page %}
+                <button disabled>{{ i }}</button>
+            {% else %}
+                <a href="?search={{ search_term }}&page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        
+
+        {% if results|length == RESULTS_PER_PAGE and end_page < total_pages %}
+            <a href="?search={{ search_term }}&page={{ end_page + 1 }}">Next 10</a>
+        {% endif %}
+
+        {% if page + 10 <= total_pages %}
+            <a href="?search={{ search_term }}&page={{ page + 10 }}">Next 10</a>
+        {% endif %}
+
+        {% if page < total_pages %}
+            <a href="?search={{ search_term }}&page={{ page + 1 }}">Next</a>
+        {% endif %}
+    </nav>
+    
+    {% endif %}
+    {% endif %}
+</body>
+</html>
