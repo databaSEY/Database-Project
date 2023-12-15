@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drivers</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <h1>Drivers</h1>
+
+  <form id="searchForm" action="{{ url_for('drivers.index') }}" method="GET" onsubmit="saveAndSubmitForms()">
+    <label for="search">Search by First Name:</label>
+    <input type="text" id="search" name="search" placeholder="Enter first name">
+    <button type="submit">Search</button>
+
+    <button type="button" onclick="toggleAdvancedSearch()">Advanced Search</button>
+
+    <div id="advanced-search" style="display: none;">
+
+      <label for="nationality">Nationality:</label>
+      <select id="nationality" name="nationality">
+        <option value="">All</option> <!-- Updated this line -->
+        {% if distinct_nationalities %}
+        <p>Data exists: {{ distinct_nationalities }}</p>
+        {% for nationality in distinct_nationalities %}
+        <option value="{{ nationality }}" {% if selected_nationality==nationality %}selected{% endif %}>{{ nationality
+          }}</option>
+        {% endfor %}
+        {% else %}
+        <p>No data found</p>
+        {% endif %}
+
+      </select>
+    </div>
+  </form>
+
+
+
+  <!-- <form id="paginationForm" action="{{ url_for('drivers.index') }}" method="GET" onsubmit="saveDriversPerPage()">
+    <label for="drivers_per_page">Drivers per Page:</label>
+    <select id="drivers_per_page" name="drivers_per_page">
+      <option value="5" {% if drivers_per_page==5 %}selected{% endif %}>5</option>
+      <option value="10" {% if drivers_per_page==10 %}selected{% endif %}>10</option>
+      <option value="20" {% if drivers_per_page==20 %}selected{% endif %}>20</option>
+      <!-- Add more options as needed -->
+    <!-- </select>
+    <button type="submit">Apply</button> -->
+  </form> -->
+
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var driversPerPageSelect = document.getElementById('drivers_per_page');
+      var searchForm = document.getElementById('searchForm');
+
+      // Set the initial value of drivers_per_page in the select box
+      driversPerPageSelect.value = localStorage.getItem('driversPerPage') || '10';
+
+      // Save the selected value in local storage when it changes
+      driversPerPageSelect.addEventListener('change', function () {
+        localStorage.setItem('driversPerPage', this.value);
+      });
+
+      // Before submitting the search form, set the value in the select box
+      searchForm.addEventListener('submit', function () {
+        driversPerPageSelect.value = localStorage.getItem('driversPerPage') || '10';
+      });
+    });
+
+  </script> -->
+
+  <table class="table-container" border="1">
+    <thead>
+      <tr>
+        <th>Driver ID</th>
+        <th>Forename</th>
+        <th>Surname</th>
+        <th>Driver Reference</th>
+        <th>Nationality</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td>{{ post['driverId'] }}</td>
+        <td>{{ post['forename'] }}</td>
+        <td>{{ post['surname'] }}</td>
+        <td>{{ post['driverRef'] }}</td>
+        <td>{{ post['nationality'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- <div class="pagination">
+      {% for page_num in range(1, total_pages + 1) %}
+          <a href="{{ url_for('drivers.index', page=page_num, drivers_per_page=drivers_per_page) }}">{{ page_num }}</a>
+      {% endfor %}
+    </div> -->
+  <!-- <div class="pagination">
+    {% if total_pages > 1 %}
+    {% set page = page or 1 %}
+
+    {% if page > 1 %}
+    <a href="{{ url_for('drivers.index', page=page-1, drivers_per_page=drivers_per_page) }}"
+      class="previous-button">Previous</a>
+    {% endif %}
+
+    {% for page_num in range(1, total_pages + 1) %}
+    {% if page_num == page %}
+    <span class="current-page">{{ page_num }}</span>
+    {% elif page_num == page + 1 or page_num == page - 1 or page_num == total_pages or page_num == 1 %}
+    <a href="{{ url_for('drivers.index', page=page_num, drivers_per_page=drivers_per_page) }}" class="other-pages">{{
+      page_num }}</a>
+    {% elif page_num == page + 2 or page_num == page - 2 %}
+    <span>...</span>
+    {% endif %}
+    {% endfor %}
+
+    {% if page < total_pages %} <a href="{{ url_for('drivers.index', page=page+1, drivers_per_page=drivers_per_page) }}"
+      class="next-button">Next</a>
+      {% endif %}
+      {% endif %}
+  </div>     -->
+</body>
+
+<script>
+
+  function toggleAdvancedSearch() {
+    var advancedSearchDiv = document.getElementById("advanced-search");
+    advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
+    console.log("Advanced Search visibility:", advancedSearchDiv.style.display);
+  }
+
+  function saveAdvancedSearchState() {
+    var advancedSearchDiv = document.getElementById("advanced-search");
+    var isVisible = (advancedSearchDiv.style.display === "block");
+    localStorage.setItem("advanced_search_visible", isVisible);
+    
+  }
+
+  function saveAndSubmitForms() {
+        saveAdvancedSearchState(); // Call your function to save advanced search state
+        document.getElementById("paginationForm").submit(); // Submit the second form
+  }
+    // Function to save the selected value in local storage
+    function saveDriversPerPage() {
+        var selectedValue = document.getElementById("drivers_per_page").value;
+        localStorage.setItem("driversPerPage", selectedValue);
+    }
+
+    // Set the selected value when the page loads
+    document.addEventListener("DOMContentLoaded", function () {
+        var savedValue = localStorage.getItem("driversPerPage");
+        if (savedValue !== null) {
+            document.getElementById("drivers_per_page").value = savedValue;
+        }
+    });
+  // Restore advanced search state on page load
+  // Restore advanced search state on page load
+  window.onload = function() {
+      var storedState = localStorage.getItem("advanced_search_visible");
+      if (storedState === "true") {
+          document.getElementById("advanced-search").style.display = "block";
+      }
+  };
+
+  function toggleDetails(index) {
+    var detailsRow = document.getElementById("details-" + index);
+    detailsRow.style.display = (detailsRow.style.display === 'none') ? '' : 'none';
+  }
+
+
+
+</script>
+
+</html>
