@@ -1,0 +1,119 @@
+/* Add this to your existing styles.css file or create a new one */
+
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+input {
+    padding: 8px;
+    margin-right: 10px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: white;
+    padding: 10px;
+    margin:20px 45px 20px 45px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+/* Add or update this in your styles.css file */
+
+.pagination {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.previous-button,
+.next-button {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #4285f4;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.previous-button:hover,
+.next-button:hover {
+    background-color: #3367d6;
+}
+
+.current-page {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+.other-pages {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #ddd;  /* Set your desired background color */
+    color: #333;  /* Set your desired text color */
+    text-decoration: none;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.other-pages:hover {
+    background-color: #ccc;  /* Set your desired background color on hover */
+    color: #555;  /* Set your desired text color on hover */
+}
+.table-container {
+    margin: 20px auto; /* Auto margin to center the table horizontally */
+}
+table {
+    width: 60%;
+    border-collapse: collapse;
+    margin:20px 45px 20px 45px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Add more styling as needed */
