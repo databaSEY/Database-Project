@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor Table</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">Constructor Table</h1>
+    <form method="GET" action="{{ url_for('constructors.index') }}" class="mb-4">
+        <div class="form-row">
+            <div class="col-md-4">
+                <label for="filter_nationality">Filter by Name:</label>
+                <input type="text" name="filter_nationality" id="filter_nationality" class="form-control" value="{{ filter_nationality }}">
+            </div>
+            <div class="col-md-4">
+                <label for="nationality_dropdown">Filter by Nationality:</label>
+                <select name="nationality_dropdown" id="nationality_dropdown" class="form-control">
+                    <option value="">All</option>
+                    {% for nationality in unique_nationalities %}
+                        <option value="{{ nationality[0] }}" {% if filter_nationality == nationality[0] %}selected{% endif %}>{{ nationality[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary mt-4">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- <form method="GET" action="{{ url_for('constructors.index') }}">
+        <label for="filter_name">Filter by Constructor Name:</label>
+        <input type="text" name="filter_name" id="filter_name" value="{{ request.args.get('filter_name', '') }}">
+        <button type="submit">Apply Filter</button>
+    </form> -->
+
+
+
+    <table class="table table-bordered">
+        {% if constructors %}
+        <thead>
+            <tr>
+                <th>Constructor ID</th>
+                <th>Name</th>
+                <th>Nationality</th>
+                <th>URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for constructor in constructors %}
+                <tr class="constructor-row" data-constructor-ref="{{ constructor.constructorRef }}">
+                    <td>{{ constructor.constructorId }}</td>
+                    <td>{{ constructor.name }}</td>
+                    <td>{{ constructor.nationality }}</td>
+                    <td>{{ constructor.url }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+            <strong>No results found!</strong>
+        {% endif %}
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-MC2CB1nZFz7ZSJlGWeNciFuECM7hA31BlDhzNMz8Tpj2Y6zD8WqUvVLON5khbt6X" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var rows = document.querySelectorAll('.constructor-row');
+
+        rows.forEach(function(row) {
+            row.addEventListener('click', function() {
+                var constructorRef = row.getAttribute('data-constructor-ref');
+                var url = '{{ url_for("constructors.details", constructorRef="", _external=True) }}' + constructorRef + '/details';
+                window.location.href = url.replace('//details', '/');
+            });
+        });
+    });
+</script>
+
+
+
+</body>
+</html>
