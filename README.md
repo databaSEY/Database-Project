@@ -3,7 +3,7 @@
 ## How to run
 flask --app project run --debug
 
-Şu an sadece dirvers.py dosyası sayesinde "http://127.0.0.1:5000/drivers" benzeri url ye gidince tabloyu bastırıyor.
+Şu an sadece drivers.py dosyası sayesinde "http://127.0.0.1:5000/drivers" benzeri url ye gidince tabloyu bastırıyor.
 
 main.py dosyası kullanılmayacak, flask olmadan veritabanını test etmek istersek diye onu da silmedim.
 
