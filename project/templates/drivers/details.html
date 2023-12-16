@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{const_name}} Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">{{const_name}} Details for {{ name.forename }} {{ name.surname }}</h1>
+    <h2>Top 10 Races</h2>
+
+    <table class="table table-bordered">
+        {% if details %}
+        <thead>
+            <tr>
+                <th>Race Year</th>
+                <th>Race Name</th>
+                <th>Position</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detail in details%}
+                <tr>
+                    <td>{{ detail.year }}</td>
+                    <td>{{ detail.name }}</td>
+                    <td>{{ detail.position }}</td>
+                    <td>{{ detail.points }}</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+            <strong>No results found!</strong>
+        {% endif %}
+    </table>
+
+    
+</div>
+
+
+</body>
+</html>

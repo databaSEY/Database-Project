@@ -6,6 +6,10 @@ from project.db import get_db
 
 bp = Blueprint('drivers', __name__)
 
+
+def convert_to_dict(row):
+    return dict(zip(row.keys(), row))
+
 def get_search_results(search_term, drivers_per_page, offset, nationality_filter):
     # Calculate the offset to retrieve the appropriate range of drivers from the database
 
@@ -33,6 +37,7 @@ def get_search_results(search_term, drivers_per_page, offset, nationality_filter
             ' ORDER BY d.driverId'
         )
         posts = db.execute(query, (nationality_filter, nationality_filter )).fetchall()
+
         
     distinct_nationalities_query = 'SELECT DISTINCT nationality FROM drivers order by 1'
     distinct_nationalities_rows = db.execute(distinct_nationalities_query,() ).fetchall()
@@ -54,6 +59,7 @@ def index():
     posts, drivers_per_page, total_drivers, distinct_nationalities = get_search_results(search_term, drivers_per_page, offset, nationality_filter)
     total_pages = total_drivers // drivers_per_page
 
+
     return render_template('drivers/index.html', posts=posts,  
                                                 total_pages = total_pages, 
                                                 page=page,
@@ -61,6 +67,28 @@ def index():
                                                 distinct_nationalities=distinct_nationalities,
                                                 selected_nationality=nationality_filter)
 
+@bp.route('/drivers/driver_details/<int:driver_id>/details')
+def driver_details(driver_id):
+    db = get_db()
+
+    name_query = f"SELECT d.forename, d.surname FROM drivers d where d.driverId = {driver_id}"
+    name = db.execute(name_query, ).fetchone()
+    print(name)
+
+    details_query = (
+        f'select  d.forename, d.surname, r.year , r.name, ds.position, ds.points'
+        ' from drivers d'
+        ' join driver_standings ds on d.driverId = ds.driverId'
+        ' join races r on ds.raceId = r.raceId'
+        f' where d.driverId = {driver_id} '
+        ' order by position '
+        ' limit 10'
+    )
+    details = db.execute(details_query, ).fetchall()
+
+
+
+    return render_template('drivers/details.html', name=name, details=details)
 
 @bp.route('/drivers/create', methods=('GET', 'POST'))
 #@login_required
