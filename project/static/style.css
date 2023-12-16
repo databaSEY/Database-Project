@@ -20,7 +20,7 @@ label {
     margin-right: 10px;
 }
 
-input {
+.search-input {
     padding: 8px;
     margin-right: 10px;
 }
@@ -92,9 +92,11 @@ li {
     background-color: #ccc;  /* Set your desired background color on hover */
     color: #555;  /* Set your desired text color on hover */
 }
+
 .table-container {
     margin: 20px auto; /* Auto margin to center the table horizontally */
 }
+
 table {
     width: 60%;
     border-collapse: collapse;
@@ -115,5 +117,30 @@ th {
 tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+.create {
+    margin-top: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: chocolate;
+    text-align: center;
+}
 
+.create-input {
+    padding: 4px;
+    margin: 15px;
+    width: 100px; /* Adjust the width as needed */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.delete-button{
+    text-align: right;
+    margin-left: 70%;
+    background-color: gray;
+
+}
+.update-button{
+    text-align: right;
+    margin-left: 75%;
+    background-color: rgb(227, 15, 15);
+}
 /* Add more styling as needed */

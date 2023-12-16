@@ -3,6 +3,7 @@ from flask import (
 )
 
 from project.db import get_db
+from flask import Flask, jsonify
 
 bp = Blueprint('drivers', __name__)
 
@@ -117,3 +118,58 @@ def create():
             return redirect(url_for('drivers.index'))
 
     return render_template('drivers/create.html')
+
+@bp.route('/drivers/delete', methods=('GET', 'POST', 'DELETE'))
+def delete():
+    if request.method == 'DELETE':
+        try:
+            data = request.json
+            driver_ids = data.get('driver_ids', [])
+            db = get_db()
+            delete_query = f"DELETE FROM drivers WHERE driverId in ("
+            for driver_id in driver_ids:
+                if driver_id != driver_ids[0]:
+                    delete_query += ", "
+                delete_query += f" {driver_id}"
+            delete_query += ")"
+            db.execute(delete_query, )
+            db.commit()
+
+            return jsonify({"message": "Driver deleted successfully"}), 200
+        except ValueError:
+            return jsonify({"error": "Invalid driver_id parameter"}), 400
+        except Exception as e:
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    else:
+        return jsonify({"error": "Method not allowed"}), 405
+
+@bp.route('/drivers/update', methods=['POST'])
+def update():
+    print("Update func")
+    try:
+        # Get the data from the JSON request body
+        updated_data = request.json.get('data', [])
+        db = get_db()
+        # Perform the update operation in your database
+        for data_entry in updated_data:
+            driver_id = data_entry.get('driverId')
+            forename = data_entry.get('forename')
+            surname = data_entry.get('surname')
+            driverRef = data_entry.get('driverRef')
+            nationality = data_entry.get('nationality')
+
+            query = ('UPDATE drivers SET forename = ?, surname = ?, driverRef = ?, nationality = ? '
+                     ' WHERE driverId = ?')
+            db.execute(query, (forename, surname, driverRef, nationality, driver_id))
+            db.commit()
+
+            # Print or use the extracted values as needed
+            print(f'Driver ID: {driver_id}, Forename: {forename}, Surname: {surname}')
+
+        # Return a response (you can customize the response based on your needs)
+        return jsonify({'message': 'Update successful'}), 200
+    except Exception as e:
+        # Handle exceptions as needed
+        print('Error updating backend:', e)
+        return jsonify({'error': 'Internal Server Error'}), 500
+
