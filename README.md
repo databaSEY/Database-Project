@@ -7,3 +7,18 @@ flask --app project run --debug
 
 main.py dosyası kullanılmayacak, flask olmadan veritabanını test etmek istersek diye onu da silmedim.
 
+### Drivers
+#### CRUD
+Create, Update, Delete işlemlerini gerçekleştiriyor.
+İşlemler doğru gerçekleşiyor fakat kullanıcı deneyimi çok da iyi değil. Bazı ufak eksikler var. 
+Mesela update ettikten sonra tekrar search yapman gerekiyor ki yeni halini görebilesin.
+Ama zamanımız az kaldı ve bunlar veritabanı ile alakasız konular.
+
+#### Details
+Satırın üstüne basınca details sayfasına gidiyor. Yasin'in yaptığı gibi aynı sayfada satırın altında açılan bir şey yapmadım henüz.
+Yapıp yapmama konusunda kararsızım.
+#### Profile sayfası
+Zamanımız az kaldığı için bu olayı pas geçme ihtimalimizi güçlü görüyorum.
+#### Login Register
+Bu kısmı yapacağım, hazır halleri var, uzun sürmez
+
