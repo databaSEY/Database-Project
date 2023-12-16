@@ -120,6 +120,20 @@
     updateSelectedDrivers();
   }
 
+  function updateSelectedDrivers() {
+    var selectedDrivers = document.querySelectorAll('.driver-row.selected');
+    var driverIds = [];
+
+    // Iterate over selected rows and extract driver IDs
+    selectedDrivers.forEach(function (row) {
+      var driverId = row.getAttribute('data-driver-id');
+      driverIds.push(driverId);
+    });
+
+    // Update the hidden input with the selected driver IDs
+    document.getElementById('driver_ids').value = JSON.stringify(driverIds);
+  }
+
   function handleButtonClick(button) {
     event.stopPropagation();
     var row = button.closest('.driver-row');
@@ -210,7 +224,7 @@
   function deleteSelectedDrivers() {
   // Retrieve the list of selected driver IDs from the hidden input
   var driverIds = JSON.parse(document.getElementById('driver_ids').value);
-
+    console.log("delete_function_isrunning")
   // Send the selected driver IDs to the server using AJAX
   fetch('/drivers/delete', {
     method: 'DELETE',
