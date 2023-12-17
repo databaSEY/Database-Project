@@ -1,0 +1,85 @@
+
+<tr class="details-{{ loop.index }} details" style="display: none;">
+    <td class="centered-cell">
+       <strong> Race Details </strong>
+    </td> 
+    <td class="centered-cell" colspan="2">
+      <strong> Race Results </strong>
+    </td> 
+</tr>
+
+<tr class="details-{{ loop.index }} details" style="display: none; ">
+
+    <td>
+        <table class="inner-details" style="width: 100%;"> 
+            <tr> 
+                <td>Date</td> 
+                <td>{{result[2]}}</td> 
+            </tr> 
+            <tr> 
+                <td> Round </td> 
+                <td> {{result[3]}}</td> 
+            </tr> 
+            <tr> 
+                <td> Place </td> 
+                <td>  {{result[9]}}</td> 
+            </tr> 
+        </table>
+     </td> 
+
+    <td colspan="2">
+
+    <table  class="inner-details" style="width: 100%;"> 
+        <tr> 
+            <td> Position </td> 
+            <td> Name Surname</td> 
+            <td> Code</td> 
+            <td> Fastest Lap </td> 
+            <td> Constructor </td> 
+        </tr> 
+        {% for driver_result in race_results[loop.index0:loop.index0+3] %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        
+        <td>{{ driver_result[0] if driver_result [loop.index0][5] is defined else "Null" }} {{ driver_result[1] if driver_result [loop.index0][5] is defined else "" }}</td>
+        <td>{{ driver_result[2] if driver_result [loop.index0][5] is defined else "Null" }}</td>
+        <td>{{ driver_result[4] if driver_result [loop.index0][5] is defined else "Null" }}</td>
+        <td>{{ driver_result[5] if driver_result [loop.index0][5] is defined else "Null" }}</td>
+    </tr>
+{% endfor %}
+    </table>
+
+    </td> 
+</tr>
+
+
+<tr class="details-{{ loop.index }} details" style="display: none;">
+    <td class="centered-cell" >
+        <strong>  Circuit Details </strong>
+    </td> 
+    <td class="centered-cell" colspan="2">
+        <strong>   Map </strong>
+    </td> 
+    </tr>
+    
+<tr class="details-{{ loop.index }} details" style="display: none;">
+<td >
+    <table class="inner-details" style="width: 100%;"> 
+        <tr> 
+            <td>Circuit Name</td> 
+            <td>{{result[4]}}</td> 
+        </tr> 
+        <tr> 
+            <td> Country </td> 
+            <td> {{result[5]}}</td> 
+        </tr> 
+
+    </table>
+<td  colspan="2">
+    <div id="map-{{ loop.index }}" class="map-container"></div>
+    <script>
+        map_ltln({{ result[6] }}, {{ result[7] }}, "map-{{ loop.index }}");
+    </script>
+</td> 
+</tr>
+
