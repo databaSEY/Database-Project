@@ -41,13 +41,15 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import races
+    app.register_blueprint(races.bp)
+    app.add_url_rule('/races', endpoint='races')
+    
     from . import home
     app.register_blueprint(home.bp)
     app.add_url_rule('/', endpoint='index')
 
-    from . import races
-    app.register_blueprint(races.bp)
-    app.add_url_rule('/', endpoint='races')
+
 
 
     return app
