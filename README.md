@@ -22,3 +22,15 @@ Zamanımız az kaldığı için bu olayı pas geçme ihtimalimizi güçlü gör�
 #### Login Register
 Bu kısmı yapacağım, hazır halleri var, uzun sürmez
 
+## admin table
+CREATE TABLE admin (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
+);
+
+INSERT INTO admin values (
+1,
+'semihgencten',
+'test'
+)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Formula1{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #a42f0f;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: #c09c1c;
+            padding: 5px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        main {
+            padding: 20px;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <h1>{% block header %}Formula1{% endblock %}</h1>
+    </header>
+
+    <nav>
+        <div>
+            <a href="{{ url_for('drivers') }}">Drivers</a>
+            <a href="{{ url_for('constructors') }}">Constructors</a>
+        </div>
+        <div>
+            {% if g.user %}
+            <span>Welcome {{ g.user['username'] }}</span>
+            <a href="{{ url_for('auth.logout') }}">Log Out</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">Admin Login</a>
+            <a href="{{ url_for('auth.logout') }}">Admin Logout</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

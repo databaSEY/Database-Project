@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+
+{% block title %}{{const_name}} Details{% endblock %}
+
+{% block header %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{const_name}} Details</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <h1 class="mb-4">{{const_name}} Details</h1>
 </head>
+{% endblock %}
+{% block content %}
 <body>
 
 <div class="container mt-4">
 
-    <h1 class="mb-4">{{const_name}} Details</h1>
+    
 
     <table class="table table-bordered">
         {% if raceInfos %}
@@ -59,4 +65,4 @@
 
 
 </body>
-</html>
+{% endblock %}
