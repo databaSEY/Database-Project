@@ -1,19 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
+{% block title %}Drivers{% endblock %}
+
+{% block header %}
 <head>
+  <div class="header-container">
+    <h1><a class="home-button" href="{{ url_for('index') }}">Formula1</a></h1>
+    <h2>Drivers</h2>
+</div>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Drivers</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+  integrity="sha384-MC2CB1nZFz7ZSJlGWeNciFuECM7hA31BlDhzNMz8Tpj2Y6zD8WqUvVLON5khbt6X"
+  crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"></script>
+
+  <script>
+    // Define a global variable with the driver details URL
+    var driverDetailsUrl = "{{ url_for('drivers.driver_details', driver_id=0, _external=True) }}";
+  </script>
+
+  <script src="../../static/scripts.js" defer></script>
 </head>
+{% endblock %}
 
+{% block content %}
 <body>
+  
   <h1>Drivers</h1>
-
+  
   <form id="searchForm" action="{{ url_for('drivers.index') }}" method="GET" onsubmit="saveAndSubmitForms()">
     <label for="search">Search by First Name:</label>
-    <input type="text" id="search" name="search" placeholder="Enter first name">
+    <input class="search-input" type="text" id="search" name="search" placeholder="Enter first name">
     <button type="submit">Search</button>
 
     <button type="button" onclick="toggleAdvancedSearch()">Advanced Search</button>
@@ -37,40 +63,6 @@
     </div>
   </form>
 
-
-
-  <!-- <form id="paginationForm" action="{{ url_for('drivers.index') }}" method="GET" onsubmit="saveDriversPerPage()">
-    <label for="drivers_per_page">Drivers per Page:</label>
-    <select id="drivers_per_page" name="drivers_per_page">
-      <option value="5" {% if drivers_per_page==5 %}selected{% endif %}>5</option>
-      <option value="10" {% if drivers_per_page==10 %}selected{% endif %}>10</option>
-      <option value="20" {% if drivers_per_page==20 %}selected{% endif %}>20</option>
-      <!-- Add more options as needed -->
-    <!-- </select>
-    <button type="submit">Apply</button> -->
-  </form> -->
-
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var driversPerPageSelect = document.getElementById('drivers_per_page');
-      var searchForm = document.getElementById('searchForm');
-
-      // Set the initial value of drivers_per_page in the select box
-      driversPerPageSelect.value = localStorage.getItem('driversPerPage') || '10';
-
-      // Save the selected value in local storage when it changes
-      driversPerPageSelect.addEventListener('change', function () {
-        localStorage.setItem('driversPerPage', this.value);
-      });
-
-      // Before submitting the search form, set the value in the select box
-      searchForm.addEventListener('submit', function () {
-        driversPerPageSelect.value = localStorage.getItem('driversPerPage') || '10';
-      });
-    });
-
-  </script> -->
-
   <table class="table-container" border="1">
     <thead>
       <tr>
@@ -79,101 +71,75 @@
         <th>Surname</th>
         <th>Driver Reference</th>
         <th>Nationality</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
       {% for post in posts %}
-      <tr>
+      <tr class="driver-row" data-driver-id="{{ post['driverId'] }}">
         <td>{{ post['driverId'] }}</td>
-        <td>{{ post['forename'] }}</td>
-        <td>{{ post['surname'] }}</td>
-        <td>{{ post['driverRef'] }}</td>
-        <td>{{ post['nationality'] }}</td>
+        <td class="editable">
+          <span>{{ post['forename'] }}</span>
+          <input id="forename" type="text" class="update-input" value="{{ post['forename'] }}" style="display: none;">
+        </td>
+        <td class="editable">
+          <span>{{ post['surname'] }}</span>
+          <input id="surname" type="text" class="update-input" value="{{ post['surname'] }}" style="display: none;">
+        </td>
+        <td class="editable">
+          <span>{{ post['driverRef'] }}</span>
+          <input id="driverRef" type="text" class="update-input" value="{{ post['driverRef'] }}" style="display: none;">
+        </td>
+        <td class="editable">
+          <span>{{ post['nationality'] }}</span>
+          <input id="nationality" type="text" class="update-input" value="{{ post['nationality'] }}"
+            style="display: none;">
+        </td>
+        <td>
+          <input type="checkbox" onclick="handleCheckboxClick(this)">
+        </td>
+        <td>
+          <button class="edit-button" type="button" onclick="handleButtonClick(this)">Edit</button>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 
-  <!-- <div class="pagination">
-      {% for page_num in range(1, total_pages + 1) %}
-          <a href="{{ url_for('drivers.index', page=page_num, drivers_per_page=drivers_per_page) }}">{{ page_num }}</a>
-      {% endfor %}
-    </div> -->
-  <!-- <div class="pagination">
-    {% if total_pages > 1 %}
-    {% set page = page or 1 %}
+  <input type="hidden" id="driver_ids" name="driver_ids">
 
-    {% if page > 1 %}
-    <a href="{{ url_for('drivers.index', page=page-1, drivers_per_page=drivers_per_page) }}"
-      class="previous-button">Previous</a>
-    {% endif %}
+  <!-- Delete button -->
+  <button class="update-button" type="button" onclick="updateBackend()">Update</button>
+  <button class="delete-button" type="button" onclick="deleteSelectedDrivers()">Delete Selected Drivers</button>
 
-    {% for page_num in range(1, total_pages + 1) %}
-    {% if page_num == page %}
-    <span class="current-page">{{ page_num }}</span>
-    {% elif page_num == page + 1 or page_num == page - 1 or page_num == total_pages or page_num == 1 %}
-    <a href="{{ url_for('drivers.index', page=page_num, drivers_per_page=drivers_per_page) }}" class="other-pages">{{
-      page_num }}</a>
-    {% elif page_num == page + 2 or page_num == page - 2 %}
-    <span>...</span>
-    {% endif %}
-    {% endfor %}
 
-    {% if page < total_pages %} <a href="{{ url_for('drivers.index', page=page+1, drivers_per_page=drivers_per_page) }}"
-      class="next-button">Next</a>
-      {% endif %}
-      {% endif %}
-  </div>     -->
+
+  <form class="create" method="post" action="{{ url_for('drivers.create') }}">
+    <label for="driverId">Driver ID:</label>
+    <input class="create-input" type="text" id="driverId" name="driverId" required>
+
+    <label for="driverRef">Driver Ref:</label>
+    <input class="create-input" type="text" id="driverRef" name="driverRef" required>
+
+    <label for="forename">Forename:</label>
+    <input class="create-input" type="text" id="forename" name="forename" required>
+
+    <label for="surname">Surname:</label>
+    <input class="create-input" type="text" id="surname" name="surname" required>
+
+    <label for="nationality">Nationality:</label>
+    <input class="create-input" type="text" id="nationality" name="nationality" required>
+
+    <button type="submit">Create</button>
+  </form>
 </body>
-
-<script>
-
-  function toggleAdvancedSearch() {
-    var advancedSearchDiv = document.getElementById("advanced-search");
-    advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
-    console.log("Advanced Search visibility:", advancedSearchDiv.style.display);
-  }
-
-  function saveAdvancedSearchState() {
-    var advancedSearchDiv = document.getElementById("advanced-search");
-    var isVisible = (advancedSearchDiv.style.display === "block");
-    localStorage.setItem("advanced_search_visible", isVisible);
-    
-  }
-
-  function saveAndSubmitForms() {
-        saveAdvancedSearchState(); // Call your function to save advanced search state
-        document.getElementById("paginationForm").submit(); // Submit the second form
-  }
-    // Function to save the selected value in local storage
-    function saveDriversPerPage() {
-        var selectedValue = document.getElementById("drivers_per_page").value;
-        localStorage.setItem("driversPerPage", selectedValue);
-    }
-
-    // Set the selected value when the page loads
-    document.addEventListener("DOMContentLoaded", function () {
-        var savedValue = localStorage.getItem("driversPerPage");
-        if (savedValue !== null) {
-            document.getElementById("drivers_per_page").value = savedValue;
-        }
-    });
-  // Restore advanced search state on page load
-  // Restore advanced search state on page load
-  window.onload = function() {
-      var storedState = localStorage.getItem("advanced_search_visible");
-      if (storedState === "true") {
-          document.getElementById("advanced-search").style.display = "block";
-      }
-  };
-
-  function toggleDetails(index) {
-    var detailsRow = document.getElementById("details-" + index);
-    detailsRow.style.display = (detailsRow.style.display === 'none') ? '' : 'none';
-  }
+{% endblock %}
 
 
 
-</script>
 
-</html>
+
+
+
+
+

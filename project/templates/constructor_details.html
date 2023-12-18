@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{const_name}} Details{% endblock %}
+
+{% block header %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <h1 class="mb-4">{{const_name}} Details</h1>
+</head>
+{% endblock %}
+{% block content %}
+<body>
+
+<div class="container mt-4">
+
+    
+
+    <table class="table table-bordered">
+        {% if raceInfos %}
+        <thead>
+            <tr>
+                <th>Race ID</th>
+                <th>Race Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for raceInfo in raceInfos %}
+                <tr>
+                    <td>{{ raceInfo.raceId }}</td>
+                    <td>{{ raceInfo.points }}</td>
+
+                    {% for race_result in race_results %}
+                        {% if race_result.raceId == raceInfo.raceId%}
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Driver Name</th>
+                                        <th>Points</th>
+                                        <th>Position</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{  race_result.results.driverId  }}</td>
+                                        <td>{{  race_result.results.points  }}</td>
+                                        <td>{{  race_result.results.position  }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+            <strong>No results found!</strong>
+        {% endif %}
+    </table>
+
+    
+</div>
+
+
+</body>
+{% endblock %}
