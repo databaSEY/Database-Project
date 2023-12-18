@@ -48,4 +48,7 @@ Kendisime bırakıyorum o kısmı
 
 # Create update delete işlemleri için login required
 @login_required ı fonksiyonun başına koyarak sadece log in olmuşsa fonksiyonun çalışmasını sağlayabilirsiniz
-Fakat edit create butonlarının login olmamışsa görünmemesi için ekstra geliştirme yapmak gerekiyor ben de onlarla uğraşacağım bundan sonra
+Fakat edit create butonlarının login olmamışsa görünmemesi için:
+Burada basit bir şey yaparak bunu sağlayabiliyoruz. templates/drivers/index sayfasına giderseniz en altta create için yazdığım formun başında ve sonundaki
+  {% if g.user %}{% endif %}
+ifadelerini görebilirsiniz. Bunlar sayesinde içindeki kısımlar sadece kullanıcı giriş yapmışsa render ediliyor ve basitçe istediğimiz özelliği elde etmiş oluyoruz.
