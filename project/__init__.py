@@ -33,6 +33,7 @@ def create_app(test_config=None):
     app.register_blueprint(drivers.bp)
     app.add_url_rule('/drivers', endpoint='drivers')
 
+
     from . import constructors
     app.register_blueprint(constructors.bp)
     app.add_url_rule('/constructors', endpoint='constructors')
@@ -43,5 +44,10 @@ def create_app(test_config=None):
     from . import home
     app.register_blueprint(home.bp)
     app.add_url_rule('/', endpoint='index')
+
+    from . import races
+    app.register_blueprint(races.bp)
+    app.add_url_rule('/', endpoint='races')
+
 
     return app
