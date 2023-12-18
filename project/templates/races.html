@@ -179,6 +179,7 @@ th {
         function toggleAdvancedSearch() {
             var advancedSearchDiv = document.getElementById("advanced-search");
             advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
+            saveAdvancedSearchState();
         }
     
         function saveAdvancedSearchState() {
@@ -189,12 +190,14 @@ th {
     
         // Restore advanced search state on page load
         window.onload = function() {
-            var storedState = localStorage.getItem("advanced_search_visible");
-            if (storedState === "true") {
-                document.getElementById("advanced-search").style.display = "block";
-            }
-        };
-        
+        var storedState = localStorage.getItem("advanced_search_visible");
+        console.log("Stored State:", storedState);
+
+        if (storedState === "true") {
+            console.log("Setting advanced-search to block");
+            document.getElementById("advanced-search").style.display = "block";
+        }
+};
         function toggleDetails(index) {
             var detailsRow = document.getElementsByClassName("details-" + index);
             for (var i = 0; i < detailsRow.length; i++) {
@@ -214,7 +217,6 @@ th {
     }
 
     </script>
-    {% if search_term %}
     {% if results %}
     <table>
         <thead>
@@ -272,7 +274,7 @@ th {
         {% endif %}
     </nav>
     
-    {% endif %}
+
     {% endif %}
 </body>
 </html>
