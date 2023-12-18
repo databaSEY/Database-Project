@@ -2,7 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from project.db import get_db
-from flask_paginate import Pagination, get_page_args
+
 
 bp = Blueprint('constructors', __name__)
 
