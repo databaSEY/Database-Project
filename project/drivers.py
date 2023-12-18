@@ -4,6 +4,8 @@ from flask import (
 
 from project.db import get_db
 from flask import Flask, jsonify
+from project.auth import login_required
+
 
 bp = Blueprint('drivers', __name__)
 
@@ -87,12 +89,10 @@ def driver_details(driver_id):
     )
     details = db.execute(details_query, ).fetchall()
 
-
-
     return render_template('drivers/details.html', name=name, details=details)
 
 @bp.route('/drivers/create', methods=('GET', 'POST'))
-#@login_required
+@login_required
 def create():
     if request.method == 'POST':
         driverId = request.form['driverId']
@@ -120,6 +120,7 @@ def create():
     return render_template('drivers/create.html')
 
 @bp.route('/drivers/delete', methods=('GET', 'POST', 'DELETE'))
+@login_required
 def delete():
     if request.method == 'DELETE':
         try:
@@ -144,6 +145,7 @@ def delete():
         return jsonify({"error": "Method not allowed"}), 405
 
 @bp.route('/drivers/update', methods=['POST'])
+@login_required
 def update():
     print("Update func")
     try:

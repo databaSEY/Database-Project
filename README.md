@@ -22,3 +22,33 @@ Zamanımız az kaldığı için bu olayı pas geçme ihtimalimizi güçlü gör�
 #### Login Register
 Bu kısmı yapacağım, hazır halleri var, uzun sürmez
 
+## admin table
+CREATE TABLE admin (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
+);
+
+INSERT INTO admin values (
+1,
+'semihgencten',
+'test'
+)
+
+## Log in for admin:
+Eğer elinizdeki Formula1.sqlite instance'ında admin tablosu oluşmamışsa yukarıdaki sql sorgusuyla tabloyu oluşturup kullanıcı ekleyebilirsiniz.
+Register sayfası oluşturmadım çünkü bu sadece adminler için, her isteyen register olsa adminliğin anlamı kalmaz.
+Eğer log in olmuşsa Welcome username şekline sağ üstte adı görünüyor ve yanında logout görünüyor. Log in olmamışsa log in görünüyor.
+
+
+
+## Base html 
+kendi sayfamı ve edanın sayfasını base den extend ettim fakat yasin'in sayfasında denediğimde düzgün olmadı. Kullandığı css den dolayı.
+Kendisime bırakıyorum o kısmı
+
+# Create update delete işlemleri için login required
+@login_required ı fonksiyonun başına koyarak sadece log in olmuşsa fonksiyonun çalışmasını sağlayabilirsiniz
+Fakat edit create butonlarının login olmamışsa görünmemesi için:
+Burada basit bir şey yaparak bunu sağlayabiliyoruz. templates/drivers/index sayfasına giderseniz en altta create için yazdığım formun başında ve sonundaki
+  {% if g.user %}{% endif %}
+ifadelerini görebilirsiniz. Bunlar sayesinde içindeki kısımlar sadece kullanıcı giriş yapmışsa render ediliyor ve basitçe istediğimiz özelliği elde etmiş oluyoruz.

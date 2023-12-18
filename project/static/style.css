@@ -143,4 +143,93 @@ tbody tr:nth-child(even) {
     margin-left: 75%;
     background-color: rgb(227, 15, 15);
 }
+
+
+  
+  .login-form{
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1.login-head {
+    color: #2c0ce1;
+    text-align: center;
+    margin-bottom: 20px; /* Add margin-bottom for spacing */
+  }
+  
+  
+  .login-label{
+    display: block;
+    margin: 10px 0 5px;
+    color: #555555;
+  }
+  
+  .login-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+  }
+  
+  .login-submit {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-submit:hover {
+    background-color: #2980b9;
+  }
+
+  /* CSS Stylesheet */
+
+
+  body, h1, h2 {
+    margin: 0;
+    padding: 0;
+}
+
+/* CSS Styles for the home-button class */
+a.home-button {
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 15px;
+    background-color: #ffcc00;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+a.home-button:hover {
+    background-color: #ffc966;
+    color: #000;
+}
+
+/* CSS Styles for the header layout */
+.header-container {
+    text-align: left; /* Align text to the left */
+}
+
+h1, h2 {
+    display: inline-block; /* Display elements as inline-block for horizontal alignment */
+    vertical-align: left; /* Align elements vertically in the middle */
+}
+
+h2 {
+    text-align: center; /* Center the text within h2 */
+    margin-left: 20px; /* Add some space between h1 and h2 */
+}
+
+
+  
 /* Add more styling as needed */

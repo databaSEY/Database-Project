@@ -1,6 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+
+{% block title %}Constructors{% endblock %}
+
+{% block header %}
 <head>
+    <h1>Constructors</h1>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constructor Table</title>
@@ -29,6 +33,8 @@
         }
     </style>
 </head>
+{% endblock %}
+{% block content %}
 <body>
 
     <form class="create-button" action="/constructors/create">
@@ -139,4 +145,5 @@
 
 
 </body>
-</html>
+{% endblock %}
+
