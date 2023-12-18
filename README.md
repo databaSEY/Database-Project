@@ -36,7 +36,7 @@ INSERT INTO admin values (
 )
 
 ## Log in for admin:
-Eğer elinizdeki Formula1.sqlite instance'ında admin tablosu oluşmamışsa aşağıdaki sql sorgusuyla tabloyu oluşturup kullanıcı ekleyebilirsiniz.
+Eğer elinizdeki Formula1.sqlite instance'ında admin tablosu oluşmamışsa yukarıdaki sql sorgusuyla tabloyu oluşturup kullanıcı ekleyebilirsiniz.
 Register sayfası oluşturmadım çünkü bu sadece adminler için, her isteyen register olsa adminliğin anlamı kalmaz.
 Eğer log in olmuşsa Welcome username şekline sağ üstte adı görünüyor ve yanında logout görünüyor. Log in olmamışsa log in görünüyor.
 
