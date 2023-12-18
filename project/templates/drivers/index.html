@@ -71,7 +71,10 @@
         <th>Surname</th>
         <th>Driver Reference</th>
         <th>Nationality</th>
-        <th>Action</th>
+        {% if g.user %}
+        <th>Select to Delete</th>
+        <th>Select to Edit</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -95,12 +98,14 @@
           <input id="nationality" type="text" class="update-input" value="{{ post['nationality'] }}"
             style="display: none;">
         </td>
+        {% if g.user %}
         <td>
           <input type="checkbox" onclick="handleCheckboxClick(this)">
         </td>
         <td>
           <button class="edit-button" type="button" onclick="handleButtonClick(this)">Edit</button>
         </td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>
@@ -109,11 +114,12 @@
   <input type="hidden" id="driver_ids" name="driver_ids">
 
   <!-- Delete button -->
+  {% if g.user %}
   <button class="update-button" type="button" onclick="updateBackend()">Update</button>
   <button class="delete-button" type="button" onclick="deleteSelectedDrivers()">Delete Selected Drivers</button>
 
 
-
+  
   <form class="create" method="post" action="{{ url_for('drivers.create') }}">
     <label for="driverId">Driver ID:</label>
     <input class="create-input" type="text" id="driverId" name="driverId" required>
@@ -132,6 +138,7 @@
 
     <button type="submit">Create</button>
   </form>
+  {% endif %}
 </body>
 {% endblock %}
 
