@@ -34,3 +34,16 @@ INSERT INTO admin values (
 'semihgencten',
 'test'
 )
+
+## Log in for admin:
+Eğer elinizdeki Formula1.sqlite instance'ında admin tablosu oluşmamışsa aşağıdaki sql sorgusuyla tabloyu oluşturup kullanıcı ekleyebilirsiniz.
+Register sayfası oluşturmadım çünkü bu sadece adminler için, her isteyen register olsa adminliğin anlamı kalmaz.
+Eğer log in olmuşsa Welcome username şekline sağ üstte adı görünüyor ve yanında logout görünüyor. Log in olmamışsa log in görünüyor.
+
+## Base html 
+kendi sayfamı ve edanın sayfasını base den extend ettim fakat yasin'in sayfasında denediğimde düzgün olmadı. Kullandığı css den dolayı.
+Kendisime bırakıyorum o kısmı
+
+# Create update delete işlemleri için login required
+@login_required ı fonksiyonun başına koyarak sadece log in olmuşsa fonksiyonun çalışmasını sağlayabilirsiniz
+Fakat edit create butonlarının login olmamışsa görünmemesi için ekstra geliştirme yapmak gerekiyor ben de onlarla uğraşacağım bundan sonra

@@ -46,6 +46,7 @@
         <div>
             <a href="{{ url_for('drivers') }}">Drivers</a>
             <a href="{{ url_for('constructors') }}">Constructors</a>
+            <a href="{{ url_for('races') }}">Races</a>
         </div>
         <div>
             {% if g.user %}
@@ -53,7 +54,6 @@
             <a href="{{ url_for('auth.logout') }}">Log Out</a>
             {% else %}
             <a href="{{ url_for('auth.login') }}">Admin Login</a>
-            <a href="{{ url_for('auth.logout') }}">Admin Logout</a>
             {% endif %}
         </div>
     </nav>
