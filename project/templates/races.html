@@ -1,14 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %}Races{% endblock %}
+{% block header %}
 <head>
+    <div class="header-container">
+        <h1><a class="home-button" href="{{ url_for('index') }}">Formula1</a></h1>
+        <h2>Races</h2>
+    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula 1 Search</title>
-    <link href="mystyle.css" rel="stylesheet">
+    <title>Races Search</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 <style>
-    body {
+.formula1-template body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
@@ -17,135 +22,126 @@
     flex-direction: column;
     align-items: center;
 }
-h1 {
+
+.formula1-template h1 {
     color: #333;
 }
 
-form {
+.formula1-template form {
     margin-top: 20px;
     text-align: center;
 }
 
-label {
+.formula1-template label {
     font-weight: bold;
     margin-right: 10px;
 }
 
-input {
+.formula1-template input {
     padding: 8px;
     font-size: 16px;
 }
 
-button {
+.formula1-template button {
     padding: 8px 16px;
     font-size: 16px;
     cursor: pointer;
 }
 
-ul {
+.formula1-template ul {
     list-style: none;
     padding: 0;
     margin: 20px 0;
 }
 
-li {
+.formula1-template li {
     margin: 5px 0;
 }
 
-nav {
+.formula1-template nav {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-a, button {
-    text-decoration: none;
-    color: #007bff;
-    padding: 8px 12px;
-    margin: 0 5px;
-    border: 1px solid #007bff;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:disabled {
+.formula1-template button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
 
-table {
-    width: 80%;
+.formula1-template table {
+    width: 90%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin:20px 45px 20px 45px;
 }
 
-th, td {
+.formula1-template th,
+.formula1-template td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
 }
 
-th {
-    background-color: #007bff;
-    color: #fff;
-}
 
-.details {
+.formula1-template .details {
     background-color: #f9f9f9;
     border-top: 2px solid #ddd;
 }
 
-.inner-details {
+.formula1-template .inner-details {
     border-collapse: collapse;
     border: none;
 }
 
-.inner-details td {
+.formula1-template .inner-details td {
     border: 1px solid #ddd;
 }
 
-.inner-details tr:first-child td {
+.formula1-template .inner-details tr:first-child td {
     border-top: none;
 }
 
-.inner-details tr:last-child td {
+.formula1-template .inner-details tr:last-child td {
     border-bottom: none;
 }
 
-.inner-details tr td:first-child {
+.formula1-template .inner-details tr td:first-child {
     border-left: none;
 }
 
-.inner-details tr td:last-child {
+.formula1-template .inner-details tr td:last-child {
     border-right: none;
 }
 
-.details td {
+.formula1-template .details td {
     padding: 10px;
 }
 
-.map-container {
+.formula1-template .map-container {
     height: 200px;
     width: 800px;
 }
 
-.img-container {
+.formula1-template .img-container {
     height: 200px;
     width: 200px;
 }
 
-.leaflet-control-container {
+.formula1-template .leaflet-control-container {
     display: none;
 }
 
-.centered-cell {
+.formula1-template .centered-cell {
     text-align: center;
 }
 
 
+
 </style>
 </head>
-<body>
+{% endblock %}
+{% block content %}
+<body class="formula1-template ">
     <h1>Formula 1 Search</h1>
 
     <form action="/races" method="get">
@@ -179,6 +175,7 @@ th {
         function toggleAdvancedSearch() {
             var advancedSearchDiv = document.getElementById("advanced-search");
             advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
+            saveAdvancedSearchState();
         }
     
         function saveAdvancedSearchState() {
@@ -189,12 +186,14 @@ th {
     
         // Restore advanced search state on page load
         window.onload = function() {
-            var storedState = localStorage.getItem("advanced_search_visible");
-            if (storedState === "true") {
-                document.getElementById("advanced-search").style.display = "block";
-            }
-        };
-        
+        var storedState = localStorage.getItem("advanced_search_visible");
+        console.log("Stored State:", storedState);
+
+        if (storedState === "true") {
+            console.log("Setting advanced-search to block");
+            document.getElementById("advanced-search").style.display = "block";
+        }
+};
         function toggleDetails(index) {
             var detailsRow = document.getElementsByClassName("details-" + index);
             for (var i = 0; i < detailsRow.length; i++) {
@@ -214,7 +213,6 @@ th {
     }
 
     </script>
-    {% if search_term %}
     {% if results %}
     <table>
         <thead>
@@ -272,7 +270,8 @@ th {
         {% endif %}
     </nav>
     
-    {% endif %}
+
     {% endif %}
 </body>
 </html>
+{% endblock %}
