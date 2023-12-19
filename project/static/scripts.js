@@ -134,7 +134,7 @@ function deleteSelectedDrivers() {
       console.error('Error:', error);
       // Handle errors as needed
     });
-  window.location.reload()
+  window.location.reload(true)
 }
 function updateBackend() {
   var rows = document.querySelectorAll('.driver-row');
@@ -173,6 +173,9 @@ function updateBackend() {
     .catch(error => {
       console.error('Error updating backend', error);
     });
+    window.location.reload(true)
 }
-
+function onCreateDriver() {
+  window.location.reload(true);
+}
 

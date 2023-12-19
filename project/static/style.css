@@ -230,6 +230,10 @@ h2 {
     margin-left: 20px; /* Add some space between h1 and h2 */
 }
 
-
+.pagination-drivers {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
   
 /* Add more styling as needed */

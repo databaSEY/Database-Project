@@ -38,8 +38,9 @@
   <h1>Drivers</h1>
   
   <form id="searchForm" action="{{ url_for('drivers.index') }}" method="GET" onsubmit="saveAndSubmitForms()">
-    <label for="search">Search by First Name:</label>
+    <label for="search">Search for Drivers:</label>
     <input class="search-input" type="text" id="search" name="search" placeholder="Enter first name">
+    <input class="search-input" type="text" id="search_surname" name="search_surname" placeholder="Enter last name">
     <button type="submit">Search</button>
 
     <button type="button" onclick="toggleAdvancedSearch()">Advanced Search</button>
@@ -136,9 +137,45 @@
     <label for="nationality">Nationality:</label>
     <input class="create-input" type="text" id="nationality" name="nationality" required>
 
-    <button type="submit">Create</button>
+    <button type="submit" onclick="onCreateDriver">Create</button>
   </form>
   {% endif %}
+
+  <nav class="pagination-drivers">
+
+    {% if page > 10 %}
+        <a href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page - 10 }}">Previous 10</a>
+    {% endif %}
+
+    {% if page > 1 %}
+        <a href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page - 1 }}">Previous</a>
+    {% endif %}
+
+    {% set start_page = page - 5 if page - 5 > 0 else 1 %}
+    {% set end_page = start_page + 9 if start_page + 9 <= total_pages else total_pages %}
+
+    {% for i in range(start_page, end_page + 1) %}
+        {% if i == page %}
+            <button disabled>{{ i }}</button>
+        {% else %}
+            <a href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ i }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+
+    
+
+    {% if results|length == RESULTS_PER_PAGE and end_page < total_pages %}
+        <a href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ end_page + 1 }}">Next 10</a>
+    {% endif %}
+
+    {% if page + 10 <= total_pages %}
+        <a href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page + 10 }}">Next 10</a>
+    {% endif %}
+
+    {% if page < total_pages %}
+        <a href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page + 1 }}">Next</a>
+    {% endif %}
+</nav>
 </body>
 {% endblock %}
 

@@ -6,27 +6,44 @@ from project.db import get_db
 from flask import Flask, jsonify
 from project.auth import login_required
 
+from math import ceil
+
 
 bp = Blueprint('drivers', __name__)
 
 RESULTS_PER_PAGE = 10
 
-def get_search_results(search_term, drivers_per_page, offset, nationality_filter):
+def get_search_results(search_term, search_term_surname, drivers_per_page, offset, nationality_filter, page):
     # Calculate the offset to retrieve the appropriate range of drivers from the database
+    offset = (page - 1) * RESULTS_PER_PAGE
 
     db = get_db()
-    total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ?', (f'{search_term}%',)).fetchone()[0]
-
+    
     if not nationality_filter:
         nationality_filter = None
-    if search_term:
+    if search_term and search_term_surname:
+        print("firsttt")
+        query = (
+           'SELECT d.driverId, d.driverRef, d.forename, d.surname, d.nationality'
+            ' FROM drivers d '
+            ' WHERE d.forename LIKE ? AND d.surname LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE  nationality=? END)'
+            ' ORDER BY d.driverId'
+            f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
+        )
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ?', (f'{search_term}%',)).fetchone()[0]
+        search_term_with_percent = f'{search_term}%'
+        search_term_surname_with_percent = f'{search_term_surname}%'
+        posts = db.execute(query, (search_term_with_percent, search_term_surname_with_percent,nationality_filter, nationality_filter)).fetchall()
+    elif search_term:
         # If a search term is provided, filter the results based on the first name
         query = (
            'SELECT d.driverId, d.driverRef, d.forename, d.surname, d.nationality'
             ' FROM drivers d '
             ' WHERE d.forename LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE  nationality=? END)'
             ' ORDER BY d.driverId'
+            f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
         )
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ?', (f'{search_term}%',)).fetchone()[0]
         search_term_with_percent = f'{search_term}%'
         posts = db.execute(query, (search_term_with_percent, nationality_filter, nationality_filter)).fetchall()
     else:
@@ -36,16 +53,20 @@ def get_search_results(search_term, drivers_per_page, offset, nationality_filter
             ' FROM drivers d'
             ' WHERE (? IS NULL OR d.nationality = ?)'
             ' ORDER BY d.driverId'
+            f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
         )
-        posts = db.execute(query, (nationality_filter, nationality_filter )).fetchall()
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE 1=1 AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
+        (nationality_filter, nationality_filter)).fetchone()[0]
+        posts = db.execute(query, (nationality_filter, nationality_filter)).fetchall()
 
-        
+    total_pages = ceil(total_drivers / RESULTS_PER_PAGE)   
+    
     distinct_nationalities_query = 'SELECT DISTINCT nationality FROM drivers order by 1'
     distinct_nationalities_rows = db.execute(distinct_nationalities_query,() ).fetchall()
     distinct_nationalities = [row[0] for row in distinct_nationalities_rows]
     # print( + "sssssoooo")
 
-    return posts, drivers_per_page, total_drivers, distinct_nationalities
+    return posts, drivers_per_page, total_drivers, distinct_nationalities, total_pages
 
 @bp.route('/drivers', methods=['GET'])
 def index():
@@ -53,12 +74,19 @@ def index():
     page = request.args.get('page', default=1, type=int)
     drivers_per_page = request.args.get('drivers_per_page', default=10, type=int)
     search_term = request.args.get('search', '')
+    search_term_surname = request.args.get('search_surname', '')
     nationality_filter = request.args.get('nationality', default=None)
     offset = (page - 1) * drivers_per_page
     
 
-    posts, drivers_per_page, total_drivers, distinct_nationalities = get_search_results(search_term, drivers_per_page, offset, nationality_filter)
-    total_pages = total_drivers // drivers_per_page
+    posts, drivers_per_page, total_drivers, distinct_nationalities, total_pages = get_search_results(search_term, 
+                                                                                        search_term_surname,
+                                                                                        drivers_per_page,
+                                                                                        offset, 
+                                                                                        nationality_filter,
+                                                                                        page
+                                                                                        )
+
 
 
     return render_template('drivers/index.html', posts=posts,  
