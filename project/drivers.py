@@ -9,9 +9,7 @@ from project.auth import login_required
 
 bp = Blueprint('drivers', __name__)
 
-
-def convert_to_dict(row):
-    return dict(zip(row.keys(), row))
+RESULTS_PER_PAGE = 10
 
 def get_search_results(search_term, drivers_per_page, offset, nationality_filter):
     # Calculate the offset to retrieve the appropriate range of drivers from the database
