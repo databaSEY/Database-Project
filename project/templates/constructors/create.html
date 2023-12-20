@@ -1,11 +1,17 @@
-<!doctype html>
-<html lang="en">
+{% extends "base.html" %}
+
+{% block title %}Create Constructor{% endblock %}
+
+{% block header %}
 <head>
+    <h1>Constructors</h1>
     <meta charset="utf-8">
     <title>Create Constructor</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
+{% endblock %}
 
+{% block content %}
 <body>
     <h1>Create Constructor</h1>
     {% with messages = get_flashed_messages() %}
@@ -37,4 +43,4 @@
         <button type="submit">Create</button>
     </form>
 </body>
-</html>
+{% endblock %}

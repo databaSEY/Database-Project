@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>{{const_name}} Details</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <h1 class="mb-4">{{const_name}} Details</h1>
 </head>
 {% endblock %}
@@ -16,42 +16,27 @@
 
 <div class="container mt-4">
 
-    
+    <h1 class="mb-4">Best Performances: <em>{{const_name}}</em> - Top 10 Races and Points</h1>
 
     <table class="table table-bordered">
         {% if raceInfos %}
         <thead>
             <tr>
-                <th>Race ID</th>
+                <th>Race Year</th>
+                <th>Race Id</th>
+                <th>Race Name</th>
+                <th>Circuit Name</th>
                 <th>Race Points</th>
             </tr>
         </thead>
         <tbody>
             {% for raceInfo in raceInfos %}
                 <tr>
-                    <td>{{ raceInfo.raceId }}</td>
-                    <td>{{ raceInfo.points }}</td>
-
-                    {% for race_result in race_results %}
-                        {% if race_result.raceId == raceInfo.raceId%}
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Driver Name</th>
-                                        <th>Points</th>
-                                        <th>Position</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{  race_result.results.driverId  }}</td>
-                                        <td>{{  race_result.results.points  }}</td>
-                                        <td>{{  race_result.results.position  }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                    {% endif %}
-                {% endfor %}
+                    <td>{{raceInfo.year}}</td>
+                    <td>{{raceInfo.raceId }}</td>                    
+                    <td>{{raceInfo.r_name }}</td>
+                    <td>{{raceInfo.c_name}}</td>
+                    <td>{{raceInfo.points }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -66,4 +51,3 @@
 
 </body>
 {% endblock %}
-
