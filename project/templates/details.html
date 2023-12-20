@@ -1,33 +1,39 @@
 
-<tr class="details-{{ loop.index }} details" style="display: none;">
+<tr class="details-{{ loop.index }} details " style="display: none;">
     <td class="centered-cell">
        <strong> Race Details </strong>
     </td> 
-    <td class="centered-cell" colspan="2">
+    <td class="centered-cell" colspan="4">
       <strong> Race Results </strong>
     </td> 
 </tr>
 
-<tr class="details-{{ loop.index }} details" style="display: none; ">
+<tr class="details-{{ loop.index }} details race-row update-row" style="display: none; ">
 
     <td>
         <table class="inner-details" style="width: 80%;"> 
-            <tr> 
+            <tr class="race-row edit-{{loop.index}}"> 
                 <td>Date</td> 
-                <td>{{result[2]}}</td> 
+                <td class="editable"><span>{{result[2]}}</span>
+                    <input id="r_date" type="text" class="update-input" value="{{ result[2] }}" style="display: none;">
+                </td> 
             </tr> 
-            <tr> 
+            <tr class="race-row edit-{{loop.index}}"> 
                 <td> Round </td> 
-                <td> {{result[3]}}</td> 
+                <td class="editable"><span>{{result[3]}}</span> 
+                    <input id="r_round" type="text" class="update-input" value="{{ result[3] }}" style="display: none;">
+                </td> 
             </tr> 
-            <tr> 
+            <tr class="race-row edit-{{loop.index}}"> 
                 <td> Place </td> 
-                <td>  {{result[9]}}</td> 
+                <td class="editable">  <span>{{result[9]}}</span>
+                    <input id="c_location" type="text" class="update-input" value="{{ result[9] }}" style="display: none;">
+                </td> 
             </tr> 
         </table>
      </td> 
 
-    <td colspan="2">
+    <td colspan="4">
 
     <table  class="inner-details" style="width: 80%;"> 
         <tr> 
@@ -57,25 +63,28 @@
     <td class="centered-cell" >
         <strong>  Circuit Details </strong>
     </td> 
-    <td class="centered-cell" colspan="2">
+    <td class="centered-cell" colspan="4">
         <strong>   Map </strong>
     </td> 
     </tr>
     
-<tr class="details-{{ loop.index }} details" style="display: none;">
+<tr class="details-{{ loop.index }} details race-row update-row" style="display: none;">
 <td >
     <table class="inner-details" style="width: 80%;"> 
-        <tr> 
+        <tr class="race-row edit-{{loop.index}}"> 
             <td>Circuit Name</td> 
-            <td>{{result[4]}}</td> 
+            <td class="editable">
+                <span>{{result[4]}}</span>
+                <input id="c_name" type="text" class="update-input" value="{{ result[4] }}" style="display: none;">
+            </td> 
         </tr> 
         <tr> 
             <td> Country </td> 
-            <td> {{result[5]}}</td> 
+            <td > {{result[5]}} </td> 
         </tr> 
 
     </table>
-<td  colspan="2">
+<td  colspan="4">
     <div id="map-{{ loop.index }}" class="map-container"></div>
     <script>
         map_ltln({{ result[6] }}, {{ result[7] }}, "map-{{ loop.index }}");
