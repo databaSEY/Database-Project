@@ -2,36 +2,46 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from project.db import get_db
+from project.auth import login_required
+from math import ceil
 
 
 bp = Blueprint('constructors', __name__)
+
+RESULTS_PER_PAGE = 10
 
 @bp.route('/constructors/')
 def index():
     con = get_db()
     cursor = con.cursor()
+    page = request.args.get('page', default=1, type=int)
     filter_name = request.args.get('filter_name', '')
-    filter_nationality = request.args.get('filter_nationality', '')
 
     unique_nationalities = con.execute("SELECT DISTINCT nationality FROM constructors ORDER BY nationality").fetchall()
     
+    offset = (page - 1) * RESULTS_PER_PAGE
+
+
     base_query = "SELECT * FROM constructors WHERE 1 = 1 "
+    total_count_query = "SELECT COUNT(*) FROM constructors WHERE 1 = 1 "
     nationality_dropdown = request.args.get('nationality_dropdown', '')
 
-    if filter_nationality:
-        base_query += f"AND lower(name) LIKE '%{filter_nationality}%'"
+    if filter_name:
+        base_query += f"AND lower(name) LIKE '%{filter_name}%'"
+        total_count_query += f"AND lower(name) LIKE '%{filter_name}%'"
     if nationality_dropdown:
         base_query += f"AND lower(nationality) LIKE '%{nationality_dropdown}%'"
+        total_count_query += f"AND lower(nationality) LIKE '%{nationality_dropdown}%'"
 
-
-    query = base_query
+    query = base_query + f" LIMIT {RESULTS_PER_PAGE} OFFSET {offset}"
     
     print(query)
     cursor.execute(query)
     constructors = cursor.fetchall()
 
     # Count total results for pagination
-    total_results = con.execute(f"SELECT COUNT(*) FROM ({base_query})").fetchone()[0]
+    total_count = cursor.execute(total_count_query).fetchone()[0]
+    total_pages = ceil(total_count / RESULTS_PER_PAGE)
 
     return render_template(
         'constructors/constructors.html', 
@@ -39,6 +49,8 @@ def index():
         filter_name=filter_name, 
         nationality_dropdown=nationality_dropdown, 
         unique_nationalities=unique_nationalities,
+        page=page, 
+        total_pages=total_pages,
     )
 
 @bp.route('/constructors/<string:constructorRef>/details')
@@ -77,7 +89,7 @@ def details(constructorRef):
     )
 
 @bp.route('/constructors/create', methods=('GET', 'POST'))
-#@login_required
+@login_required
 def create():
     if request.method == 'POST':
         constructorId = request.form['constructorId']
@@ -106,8 +118,8 @@ def create():
     return render_template('constructors/create.html')
 
 @bp.route('/constructors/update', methods=['POST'])
+@login_required
 def update():
-    print("Update func")
     try:
         # Get the data from the JSON request body
         updated_data = request.json.get('data', [])
@@ -120,8 +132,7 @@ def update():
             nationality = data_entry.get('nationality')
             url = data_entry.get('url')
 
-            query = ('UPDATE drivers SET constructorRef = ?, name = ?, nationality = ?, url = ? '
-                     ' WHERE constructorId = ?')
+            query = ('UPDATE constructors SET constructorRef = ?, name = ?, nationality = ?, url = ? WHERE constructorId = ? ')
             db.execute(query, (constructorRef, name, nationality, url, constructorId))
             db.commit()
 
@@ -131,3 +142,32 @@ def update():
         # Handle exceptions as needed
         print('Error updating backend:', e)
         return jsonify({'error': 'Internal Server Error'}), 500
+
+@bp.route('/constructors/delete', methods=('GET', 'POST', 'DELETE'))
+@login_required
+def delete():
+    if request.method == 'DELETE':
+        try:
+            print("bfkdfn")
+            constructorIds = request.json.get('constructorIds', [])
+            if constructorIds:
+                for const_id in constructorIds:
+                    print(const_id)
+            db = get_db()
+            query = f'DELETE FROM constructors WHERE constructorId in ("'
+            for const_id in constructorIds:
+                if const_id != constructorIds[0]:
+                    query += '", "'
+                query += f"{const_id}"
+            query += '")'
+            print(query)
+            db.execute(query, )
+            db.commit()
+
+            return jsonify({"message": "Constructor deleted successfully"}), 200
+        except ValueError:
+            return jsonify({"error": "Invalid constructorId parameter"}), 400 #silinebilir
+        except Exception as e:
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    else:
+        return jsonify({"error": "Method not allowed"}), 405
