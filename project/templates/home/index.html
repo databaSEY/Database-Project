@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   <style>
@@ -24,6 +25,7 @@
 <body>
 
     <h2 style="color: white"  >Top Drivers</h2>
+
     <table>
         <thead>
       <tr>
@@ -55,7 +57,9 @@
       <!-- Rows from your query go here -->
     </table>
 
+
     <h2 style="color: white"  >Top Constructors</h2>
+
 <table>
     <thead>
   <tr>
@@ -86,13 +90,16 @@
   <!-- Rows from your query go here -->
 </table>
     
+
 <h2 style="color: white"  >Last Races</h2>
+
 <table>
     <thead>
   <tr>
     <th>Num</th>
     <th>Name</th>
     <th>Date</th>
+
   </tr>
 </thead>
 <tbody>

@@ -171,3 +171,4 @@ def delete():
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     else:
         return jsonify({"error": "Method not allowed"}), 405
+

@@ -16,15 +16,27 @@ cursor = connection.cursor()
 
 # Fetch data (optional)
 # cursor.execute("SELECT * FROM users")
-cursor.execute('SELECT d.driverId, d.driverRef, d.forename, d.surname, d.nationality'
-        ' FROM drivers d'
-        ' ORDER BY driverId')
+
+cursor.execute('SELECT * FROM constructors LIMIT 10')
 rows = cursor.fetchall()
 
 for row in rows:
     for x in row:
         print(str(x), end=" | ")
     print("")
+
+# cursor.execute("DELETE FROM constructors WHERE constructorId IN('8', '9')")
+# cursor.fetchall()
+
+# cursor.execute('SELECT * FROM constructors LIMIT 10')
+# rows = cursor.fetchall()
+
+# print("After deletion")
+for row in rows:
+    for x in row:
+        print(str(x), end=" | ")
+    print("")
+
 
 # Close the connection
 connection.close()
