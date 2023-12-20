@@ -60,22 +60,25 @@
             <tbody>
                 {% for constructor in constructors %}
                     <tr class="constructor-row" data-constructor-ref="{{ constructor.constructorRef }}" data-constructorId="{{ constructor.constructorId }}">
-                        <td class="go-details">{{ constructor.constructorId }}</td>
+                        <td>
+                            <span class="go-details">{{ constructor.constructorId }}</span>
+                        </td>
                         <td class="editable">
-                            <span>{{ constructor.constructorRef }}</span>
+                            <span class="go-details">{{ constructor.constructorRef }}</span>
                             <input id="constructorRef" type="text" class="update-input" value="{{ constructor.constructorRef }}" style="display: none;">
                         </td>
                         <td class="editable">
-                            <span>{{ constructor.name }}</span>
+                            <span class="go-details">{{ constructor.name }}</span>
                             <input id="name" type="text" class="update-input" value="{{ constructor.name }}" style="display: none;">
                         </td>
                         <td class="editable">
-                            <span>{{ constructor.nationality }}</span>
+                            <span class="go-details">{{ constructor.nationality }}</span>
                             <input id="nationality" type="text" class="update-input" value="{{ constructor.nationality }}" style="display: none;">
                         </td>
                         <td class="editable">
-                            <span>{{ constructor.url }}</span>
+                            <span style="display: none" class="go-details">{{ constructor.url }}</span>
                             <input id="url" type="text" class="update-input" value="{{ constructor.url }}" style="display: none;">
+                            <a style="color: black" href="{{ constructor.url }}" target="_blank">Wikipedia Page for {{ constructor.name }}</a>
                         </td>
                         {% if g.user %}
                         <td>
@@ -131,9 +134,9 @@
                 <a class="next-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
             {% endif %}
             {% if g.user %}
-            <button class="delete-button" type="button" onclick="deleteSelected()">Delete Selected Constructors</button>
-            <button class="update-button" type="button" onclick="updateBackend()">Update</button>
-        {% endif%}
+                <button class="delete-button" type="button" onclick="deleteSelected()">Delete Selected Constructors</button>
+                <button class="update-button" type="button" onclick="updateBackend()">Update</button>
+            {% endif%}
 
         </nav>
     {% else %}
@@ -142,16 +145,17 @@
 
     
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var rows = document.querySelectorAll('.constructor-row');
 
         rows.forEach(function(row) {
-            var details = row.querySelector('.go-details');
+            //var details = row.querySelector('.go-details');
 
             row.addEventListener('click', function(event) {
                 // Check if the clicked element is the edit button
-                if (event.target === details) {
+                if (!event.target.classList.contains('update-input')) {
                     var constructorRef = row.getAttribute('data-constructor-ref');
                     var url = '{{ url_for("constructors.details", constructorRef="", _external=True) }}' + constructorRef + '/details';
                     window.location.href = url.replace('//details', '/');
@@ -241,7 +245,7 @@ function handleButtonClick(button) {
         var spanElement = editableCell.querySelector('span');
         var inputElement = editableCell.querySelector('input');
 
-        spanElement.style.display = spanElement.style.display === 'none' ? 'inline' : 'none';
+        //spanElement.style.display = spanElement.style.display === 'none' ? 'inline' : 'none';
         inputElement.style.display = inputElement.style.display === 'none' ? 'inline' : 'none';
     });
 }
