@@ -1,166 +1,42 @@
 {% extends "base.html" %}
+
 {% block title %}Races{% endblock %}
+
 {% block header %}
 <head>
     <div class="header-container">
-        <h1><a class="home-button" href="{{ url_for('index') }}">Formula1</a></h1>
-        <h2>Races</h2>
+        <h1><a class="home-button" href="{{ url_for('index') }}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/1920px-F1.svg.png" alt="Formula1 Logo"></a></h1>
     </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Races Search</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../static/races_scripts.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<style>
-.formula1-template body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.formula1-template h1 {
-    color: #333;
-}
-
-.formula1-template form {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.formula1-template label {
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.formula1-template input {
-    padding: 8px;
-    font-size: 16px;
-}
-
-.formula1-template button {
-    padding: 8px 16px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.formula1-template ul {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-.formula1-template li {
-    margin: 5px 0;
-}
-
-.formula1-template nav {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.formula1-template button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.formula1-template table {
-    width: 90%;
-    border-collapse: collapse;
-    margin:20px 45px 20px 45px;
-}
-
-.formula1-template th,
-.formula1-template td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-
-.formula1-template .details {
-    background-color: #f9f9f9;
-    border-top: 2px solid #ddd;
-}
-
-.formula1-template .inner-details {
-    border-collapse: collapse;
-    border: none;
-}
-
-.formula1-template .inner-details td {
-    border: 1px solid #ddd;
-}
-
-.formula1-template .inner-details tr:first-child td {
-    border-top: none;
-}
-
-.formula1-template .inner-details tr:last-child td {
-    border-bottom: none;
-}
-
-.formula1-template .inner-details tr td:first-child {
-    border-left: none;
-}
-
-.formula1-template .inner-details tr td:last-child {
-    border-right: none;
-}
-
-.formula1-template .details td {
-    padding: 10px;
-}
-
-.formula1-template .map-container {
-    height: 200px;
-    max-width: 100%;
-}
-
-.formula1-template .img-container {
-    height: 200px;
-    width: 200px;
-}
-
-.formula1-template .leaflet-control-container {
-    display: none;
-}
-
-.formula1-template .centered-cell {
-    text-align: center;
-}
-
-
-
-</style>
 </head>
 {% endblock %}
 {% block content %}
-<body class="formula1-template ">
-    <h1>Formula 1 Search</h1>
+<body>
+    <h1 style="color: white" >Races</h1>
 
     <form action="/races" method="get">
-        <label for="search">Search:</label>
-        <input type="text" id="search" name="search" placeholder="Turkey Grand Prix" value="{{ search_term }}">
-        
+        <label style="color: white" for="search">Search:</label>
+        <input class ="search-input" type="text" id="search" name="search" placeholder="Turkey Grand Prix" value="{{ search_term }}">
+        <button type="submit">Search</button>
         <button type="button" onclick="toggleAdvancedSearch()">Advanced Search</button>
 
         <div id="advanced-search" style="display: none;">
-            <label for="year">Year:</label>
-            <select id="year" name="year">
+            <label style="color: white"  for="year">Year:</label>
+            <select id="year" name="Year">
                 <option value="" {% if not selected_year %}selected{% endif %}>All</option>
                 {% for year in distinct_years %}
                     <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
                 {% endfor %}
             </select>
     
-            <label for="country">Country:</label>
-            <select id="country" name="country">
+            <label style="color: white" for="Country">Country:</label>
+            <select id="country" name="Country">
                 <option value="" {% if not selected_country %}selected{% endif %}>All</option>
                 {% for country in distinct_countries %}
                     <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>{{ country }}</option>
@@ -168,195 +44,11 @@
             </select>
         </div>
     
-        <button type="submit">Search</button>
-    </form>
-    <script>
-    
-        function toggleAdvancedSearch() {
-            var advancedSearchDiv = document.getElementById("advanced-search");
-            advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
-            saveAdvancedSearchState();
-        }
-    
-        function saveAdvancedSearchState() {
-            var advancedSearchDiv = document.getElementById("advanced-search");
-            var isVisible = (advancedSearchDiv.style.display === "block");
-            localStorage.setItem("advanced_search_visible", isVisible);
-        }
-    
-        // Restore advanced search state on page load
-        window.onload = function() {
-        var storedState = localStorage.getItem("advanced_search_visible");
-        console.log("Stored State:", storedState);
-
-        if (storedState === "true") {
-            console.log("Setting advanced-search to block");
-            document.getElementById("advanced-search").style.display = "block";
-        }
-};
-        function toggleDetails(index) {
-            var detailsRow = document.getElementsByClassName("details-" + index);
-            for (var i = 0; i < detailsRow.length; i++) {
-            detailsRow[i].style.display = (detailsRow[i].style.display === 'none') ? '' : 'none';}
-        }
        
-        function map_ltln(lat, lon, mapId) {
-            // Initialize the map with a unique ID5
-            var map = L.map(mapId).setView([lat, lon], 12)
-            // Add a tile layer (you can choose different providers)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-                    
-            // Add a marker at the specified coordinates
-            L.marker([lat, lon]).addTo(map);
-    }
-    
-function deleteSelectedRaces() {
-  // Retrieve the list of selected driver IDs from the hidden input
-  var race_ids = JSON.parse(document.getElementById('race_ids').value);
-  console.log("delete_function_isrunning")
-  // Send the selected driver IDs to the server using AJAX
-  fetch('/races/delete', {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json', // Add this line
-    },
-    body: JSON.stringify({ race_ids: race_ids }),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Success:', data);
-      // Optionally, update the UI or perform other actions based on the server response
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      // Handle errors as needed
-    });
-  window.location.reload()
-}
-// Function to handle checkbox click
-function handleCheckboxClick(checkbox) {
-  // Stop the propagation of the click event to prevent navigation
-  event.stopPropagation();
-  // Get the row associated with the checkbox
-  var row = checkbox.closest('.race-row');
+    </form>
 
-  // Toggle the 'selected' class on the row
-  row.classList.toggle('selected');
-
-  // Update the list of selected driver IDs
-  updateSelectedRaces();
-}
-
-function updateSelectedRaces() {
-  var selectedRaces = document.querySelectorAll('.race-row.selected');
-  var raceIds = [];
-
-  // Iterate over selected rows and extract driver IDs
-  selectedRaces.forEach(function (row) {
-    var raceId = row.getAttribute('data-race-id');
-    raceIds.push(raceId);
-  });
-
-  // Update the hidden input with the selected driver IDs
-  document.getElementById('race_ids').value = JSON.stringify(raceIds);
-}
-
-function handleButtonClick(button, index) {
-  event.stopPropagation();
-
-  // Get all rows with the class '.race-row'
-  var rows = document.querySelectorAll('.edit-'+index);
-
-  // Loop through each row
-  rows.forEach(function (row) {
-    var editableCells = row.querySelectorAll('.editable');
-
-    // Toggle visibility of text and input elements within the row
-    editableCells.forEach(function (editableCell) {
-      var spanElement = editableCell.querySelector('span');
-      var inputElement = editableCell.querySelector('input');
-
-      spanElement.style.display = spanElement.style.display === 'none' ? 'inline' : 'none';
-      inputElement.style.display = inputElement.style.display === 'none' ? 'inline' : 'none';
-    });
-  });
-}
-
-
-function updateBackend() {
-  var rows = document.querySelectorAll('.update-row');
-  var updatedData = [];
-  console.log(rows);
-  var sw = 0;
-  rows.forEach(function (row) {
-    // Switch statement
-    switch (sw) {
-        case 0:
-            var raceId = row.getAttribute('data-race-id');
-            var circuitId = row.getAttribute('data-circuit-id');
-            var r_name = row.querySelector('.editable [id="r_name"]').value;
-            var r_year = row.querySelector('.editable [id="r_year"]').value;
-            var c_country = row.querySelector('.editable [id="c_country"]').value;
-            sw = 1;
-            break;
-        case 1:
-            var r_date = row.querySelector('.editable [id="r_date"]').value;
-            var r_round = row.querySelector('.editable [id="r_round"]').value;
-            var c_location = row.querySelector('.editable [id="c_location"]').value;
-            sw = 2;
-            break;
-
-        case 2:
-            var c_name = row.querySelector('.editable [id="c_name"]').value;
-            sw = 0;
-            break;
-    }
-    updatedData.push({
-      raceId: raceId,
-      r_name: r_name,
-      r_year: r_year,
-      r_date: r_date,
-      r_round: r_round,
-      circuitId: circuitId,
-      c_name: c_name,
-      c_location: c_location,
-      c_country: c_country
-      // Add more fields as needed
-    });
-   
-  }
-
-  );
-
-  // Make an AJAX request to update the backend
-  fetch('/races/update', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ data: updatedData }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response from the server if needed
-      console.log('Update successful', data);
-    })
-    .catch(error => {
-      console.error('Error updating backend', error);
-    });
-}
-
-    </script>
     {% if results %}
-    <table>
+    <table class="table-container">
         <thead>
             <tr>
                 <th>Name</th>
@@ -381,11 +73,11 @@ function updateBackend() {
                         <input id="c_country" type="text" class="update-input" value="{{ result[5] }}" style="display: none;">
                     </td>
                     {% if g.user %}
-                    <td>
+                    <td class="edit-button-td">
                     <input type="checkbox" onclick="handleCheckboxClick(this)">
                     </td>
-                    <td>
-                        <button class="edit-button" type="button" onclick="handleButtonClick(this,{{  loop.index}})">Edit</button>
+                    <td class="edit-button-td">
+                    <button class="edit-button" type="button" onclick="handleButtonClick(this,{{  loop.index}})">Edit</button>
                     </td>
                     {% endif %}
                 </tr>
@@ -394,15 +86,21 @@ function updateBackend() {
             {% endfor %}
         </tbody>
     </table>
+
+    
     <input type="hidden" id="race_ids" name="race_ids">
-    <nav>
+
+    {% endif %}
+
+
+    <nav class="pagination-drivers">
 
         {% if page > 10 %}
-            <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page - 10 }}">Previous 10</a>
+            <a class="previous-button" href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page - 10 }}">Previous 10</a>
         {% endif %}
 
         {% if page > 1 %}
-            <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page - 1 }}">Previous</a>
+            <a class="previous-button" href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page - 1 }}">Previous</a>
         {% endif %}
 
         {% set start_page = page - 5 if page - 5 > 0 else 1 %}
@@ -410,31 +108,33 @@ function updateBackend() {
 
         {% for i in range(start_page, end_page + 1) %}
             {% if i == page %}
-                <button disabled>{{ i }}</button>
+                <button class="current-page" disabled>{{ i }}</button>
             {% else %}
-                <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ i }}">{{ i }}</a>
+                <a class="other-pages" href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ i }}">{{ i }}</a>
             {% endif %}
         {% endfor %}
 
         
 
         {% if results|length == RESULTS_PER_PAGE and end_page < total_pages %}
-            <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ end_page + 1 }}">Next 10</a>
+            <a class="next-button" href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ end_page + 1 }}">Next 10</a>
         {% endif %}
 
         {% if page + 10 <= total_pages %}
-            <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page + 10 }}">Next 10</a>
+            <a class="next-button" href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page + 10 }}">Next 10</a>
         {% endif %}
 
         {% if page < total_pages %}
-            <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
+            <a class="next-button" href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
         {% endif %}
-    </nav>
+        {% if g.user %}
+        <div class="user-actions">
+            <button class="update-button" type="button" onclick="updateBackend()">Update</button>
+            <button class="delete-button" type="button" onclick="deleteSelectedRaces()">Delete Selected Races</button>
+        </div>
     {% endif %}
-
+    </nav>
     {% if g.user %}
-    <button class="delete-button" type="button" onclick="deleteSelectedRaces()">Delete Selected Races</button>
-    <button class="update-button" type="button" onclick="updateBackend()">Update</button>
     <form class="create" method="post" action="{{ url_for('races.create') }}">
 
     <!-- Circuit Section -->
@@ -471,6 +171,7 @@ function updateBackend() {
 
     </form>
     {% endif %}
+
 </body>
 </html>
 {% endblock %}

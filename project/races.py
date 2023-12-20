@@ -173,6 +173,7 @@ def update():
             db.commit()
         # Return a response (you can customize the response based on your needs)
         return jsonify({'message': 'Update successful'}), 200
+
     except Exception as e:
         # Handle exceptions as needed
         print('Error updating backend:', e)

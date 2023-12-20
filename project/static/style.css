@@ -1,14 +1,9 @@
-/* Add this to your existing styles.css file or create a new one */
-
-body {
-    background-color: #f4f4f4;
-    font-family: Arial, sans-serif;
-    margin: 0;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+a.home-button img {
+    padding: 10px 10px; 
+    border-radius: 5px;
+    display: inline-block;
+    max-width: 300px; /* Set a maximum width for the logo */
+    max-height: 200px;
 }
 
 form {
@@ -17,217 +12,187 @@ form {
 }
 
 label {
+    font-weight: bold;
     margin-right: 10px;
 }
 
 .search-input {
     padding: 8px;
     margin-right: 10px;
+    font-size: 16px;
 }
 
 button {
-    background-color: #007bff;
+    background-color: #555;
     color: white;
     padding: 8px 16px;
+    font-size: 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+button:hover {
+    background-color: #333;
 }
 
-li {
-    background-color: white;
-    padding: 10px;
-    margin:20px 45px 20px 45px;
-    border-radius: 4px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-/* Add or update this in your styles.css file */
-
-.pagination {
+.pagination-drivers {
     margin: 20px auto;
     text-align: center;
 }
 
 .previous-button,
-.next-button {
+.next-button,
+.current-page
+{
     display: inline-block;
     padding: 8px 12px;
-    background-color: #4285f4;
-    color: #fff;
+    background-color: #555;
+    color: white;
     text-decoration: none;
     border-radius: 4px;
     margin-right: 5px;
 }
 
-.previous-button:hover,
-.next-button:hover {
-    background-color: #3367d6;
-}
-
-.current-page {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-right: 5px;
-}
 .other-pages {
     display: inline-block;
     padding: 8px 12px;
-    background-color: #ddd;  /* Set your desired background color */
-    color: #333;  /* Set your desired text color */
+    background-color: white;
+    color: #555;
     text-decoration: none;
     border-radius: 4px;
     margin-right: 5px;
 }
 
+.current-page:hover,
+.previous-button:hover,
+.next-button:hover
+{
+    background-color: #ccc;
+    color: #2e2e2e;
+}
+
 .other-pages:hover {
-    background-color: #ccc;  /* Set your desired background color on hover */
-    color: #555;  /* Set your desired text color on hover */
+    background-color: #777;
+    color: white;
 }
 
 .table-container {
-    margin: 20px auto; /* Auto margin to center the table horizontally */
+    margin: 20px auto;
 }
 
 table {
-    width: 60%;
+    width: 90%;
     border-collapse: collapse;
-    margin:20px 45px 20px 45px;
+    margin: 20px 45px 20px 45px;
 }
 
 th, td {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.9);
     text-align: left;
 }
 
 th {
-    background-color: #007bff;
+    background-color: #555;
     color: white;
 }
 
 tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.7);
 }
+
 .create {
-    margin-top: 20px;
-    margin-left: 20%;
-    margin-right: 20%;
-    background-color: chocolate;
-    text-align: center;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 15px; /* Adjust padding */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    margin-bottom: 4px; /* Adjust margin */
 }
 
 .create-input {
-    padding: 4px;
-    margin: 15px;
-    width: 100px; /* Adjust the width as needed */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    width: calc(100% - 16px);
+    padding: 8px;
+    margin-bottom: 12px; /* Adjust margin */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-.delete-button{
+button {
+    padding: 10px 15px;
+    font-size: 14px; /* Adjust font size */
+}
+
+/* Optional: Add some spacing between sections */
+.create-input:not(:last-child) {
+    margin-right: 8px; /* Adjust margin */
+}
+
+/* Optional: Adjust input height for date and number inputs */
+[type="date"],
+[type="number"] {
+    height: 38px;
+}
+.delete-button,
+.update-button {
     text-align: right;
-    margin-left: 70%;
-    background-color: gray;
-
+    margin-top: 5px;
+    margin-left: 10px;
+    background-color: #555;
 }
-.update-button{
-    text-align: right;
-    margin-left: 75%;
-    background-color: rgb(227, 15, 15);
+.user-actions {
+    display: flex;
+    gap: 10px; /* Adjust the gap as needed */
+    
 }
-
-
-  
-  .login-form{
-    background-color: #ffffff;
+.login-form {
+    background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1.login-head {
-    color: #2c0ce1;
+}
+
+h1.login-head {
+    color: #555;
     text-align: center;
-    margin-bottom: 20px; /* Add margin-bottom for spacing */
-  }
-  
-  
-  .login-label{
+    margin-bottom: 20px;
+}
+
+.login-label {
     display: block;
     margin: 10px 0 5px;
-    color: #555555;
-  }
-  
-  .login-input {
+    color: #777;
+}
+
+.login-input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     box-sizing: border-box;
-    border: 1px solid #cccccc;
+    border: 1px solid #ccc;
     border-radius: 4px;
-  }
-  
-  .login-submit {
+}
+
+.login-submit {
     width: 100%;
     padding: 10px;
-    background-color: #3498db;
-    color: #ffffff;
+    background-color: #555;
+    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .login-submit:hover {
-    background-color: #2980b9;
-  }
-
-  /* CSS Stylesheet */
-
-
-  body, h1, h2 {
-    margin: 0;
-    padding: 0;
 }
 
-/* CSS Styles for the home-button class */
-a.home-button {
-    text-decoration: none;
-    color: #333;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px 15px;
-    background-color: #ffcc00;
-    border-radius: 5px;
-    display: inline-block;
-}
-
-a.home-button:hover {
-    background-color: #ffc966;
-    color: #000;
-}
-
-/* CSS Styles for the header layout */
-.header-container {
-    text-align: left; /* Align text to the left */
-}
-
-h1, h2 {
-    display: inline-block; /* Display elements as inline-block for horizontal alignment */
-    vertical-align: left; /* Align elements vertically in the middle */
-}
-
-h2 {
-    text-align: center; /* Center the text within h2 */
-    margin-left: 20px; /* Add some space between h1 and h2 */
+.login-submit:hover {
+    background-color: #333;
 }
 
 .pagination-drivers {
@@ -235,5 +200,50 @@ h2 {
     justify-content: center;
     margin-bottom: 20px;
 }
-  
-/* Add more styling as needed */
+
+details {
+    background-color: rgba(249, 249, 249, 0.2);
+    border-top: 2px solid #ddd;
+}
+
+.inner-details {
+    border-collapse: collapse;
+    border: none;
+}
+
+.inner-details td {
+    border: 1px solid #ddd;
+}
+
+.inner-details tr:first-child td {
+    border-top: none;
+}
+
+.inner-details tr:last-child td {
+    border-bottom: none;
+}
+
+.inner-details tr td:first-child {
+    border-left: none;
+}
+
+.inner-details tr td:last-child {
+    border-right: none;
+}
+
+.details td {
+    padding: 10px;
+}
+
+.map-container {
+    height: 200px;
+    max-width: 100%;
+}
+
+.leaflet-control-container {
+    display: none;
+}
+
+.centered-cell {
+    text-align: center;
+}

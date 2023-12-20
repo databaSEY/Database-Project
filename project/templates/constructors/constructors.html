@@ -4,114 +4,148 @@
 
 {% block header %}
 <head>
-    <h1>Constructors</h1>
+    <div class="header-container">
+        <h1><a class="home-button" href="{{ url_for('index') }}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/1920px-F1.svg.png" alt="Formula1 Logo"></a></h1>
+    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constructor Table</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-        body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            flex-direction: column; /* Adjusted for column layout */
-        }
-
-        .create-button {
-            align-self: flex-end; /* Align to the right */
-            margin-top: 30px; /* Adjusted margin top */
-            margin-right: 30px;
-        }
-
-        .editable {
-            cursor: pointer;
-        }
-
-        .editable input {
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 {% endblock %}
 {% block content %}
 <body>
-
+    {% if g.user %}
     <form class="create-button" action="/constructors/create">
         <button type="submit" class="btn btn-primary">Create Constructor</button>
     </form>
-
+    {% endif %}
 <div class="container mt-4">
 
-    <h1 class="mb-4">Constructor Table</h1>
-    <form method="GET" action="{{ url_for('constructors.index') }}" class="mb-4">
+    <form id="searchForm" method="GET" action="{{ url_for('constructors.index') }}" class="mb-4">
         <div class="form-row">
             <div class="col-md-4">
-                <label for="filter_nationality">Filter by Name:</label>
-                <input type="text" name="filter_nationality" id="filter_nationality" class="form-control" value="{{ filter_nationality }}">
-            </div>
-            <div class="col-md-4">
-                <label for="nationality_dropdown">Filter by Nationality:</label>
+                <label  style="color: white" for="filter_name">Filter by Name:</label>
+                <input type="search-inputs" name="filter_name" id="filter_name" class="form-control search-input" value="{{ filter_name }}" placeholder="Name">
+                <label  style="color: white" for="nationality_dropdown">Filter by Nationality:</label>
                 <select name="nationality_dropdown" id="nationality_dropdown" class="form-control">
                     <option value="">All Nationalities</option>
                     {% for nationality in unique_nationalities %}
-                        <option value="{{ nationality[0] }}" {% if filter_nationality == nationality[0] %}selected{% endif %}>{{ nationality[0] }}</option>
+                        <option value="{{ nationality[0] }}" {% if nationality_dropdown == nationality[0] %}selected{% endif %}>{{ nationality[0] }}</option>
                     {% endfor %}
                 </select>
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary mt-4">Search</button>
+                <button type="submit">Search</button>
             </div>
         </div>
     </form>
 
-    <table class="table table-bordered">
-        {% if constructors %}
-        <thead>
-            <tr>
-                <th>Constructor ID</th>
-                <th>Constructor Reference</th>
-                <th>Name</th>
-                <th>Nationality</th>
-                <th>URL</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for constructor in constructors %}
-                <tr class="constructor-row" data-constructor-ref="{{ constructor.constructorRef }}">
-                    <td>{{ constructor.constructorId }}</td>
-                    <td class="editable" data-field="constructorRef">{{constructor.constructorRef}}</td>
-                    <td class="editable" data-field="name">{{ constructor.name }}</td>
-                    <td class="editable" data-field="nationality">{{ constructor.nationality }}</td>
-                    <td class="editable" data-field="url">{{ constructor.url }}</td>
-                    <td>
-                        <!-- Edit button with a link to the edit page -->
-                        <button class="btn btn-primary edit-btn">Edit</button>
-                    </td>
+    {% if constructors %}
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>Constructor ID</th>
+                    <th>Constructor Reference</th>
+                    <th>Name</th>
+                    <th>Nationality</th>
+                    <th>URL</th>
+                    {% if g.user %}
+                        <th>Select to Delete</th>
+                        <th>Select to Edit</th>
+                    {% endif %}
                 </tr>
-            {% endfor %}
-        </tbody>
-        {% else %}
-            <strong>No results found!</strong>
-        {% endif %}
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% for constructor in constructors %}
+                    <tr class="constructor-row" data-constructor-ref="{{ constructor.constructorRef }}" data-constructorId="{{ constructor.constructorId }}">
+                        <td class="go-details">{{ constructor.constructorId }}</td>
+                        <td class="editable">
+                            <span>{{ constructor.constructorRef }}</span>
+                            <input id="constructorRef" type="text" class="update-input" value="{{ constructor.constructorRef }}" style="display: none;">
+                        </td>
+                        <td class="editable">
+                            <span>{{ constructor.name }}</span>
+                            <input id="name" type="text" class="update-input" value="{{ constructor.name }}" style="display: none;">
+                        </td>
+                        <td class="editable">
+                            <span>{{ constructor.nationality }}</span>
+                            <input id="nationality" type="text" class="update-input" value="{{ constructor.nationality }}" style="display: none;">
+                        </td>
+                        <td class="editable">
+                            <span>{{ constructor.url }}</span>
+                            <input id="url" type="text" class="update-input" value="{{ constructor.url }}" style="display: none;">
+                        </td>
+                        {% if g.user %}
+                        <td>
+                            <input type="checkbox" onclick="handleCheckboxClick(this)">
+                        </td>
+                        <td>
+                            <button class="edit-button" type="button" onclick="handleButtonClick(this)">Edit</button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-MC2CB1nZFz7ZSJlGWeNciFuECM7hA31BlDhzNMz8Tpj2Y6zD8WqUvVLON5khbt6X" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <input type="hidden" id="constructorIds" name="constructorIds">
+
+  
+
+        <nav class="pagination-drivers">
+            {% if page > 10 %}
+                <a class="previous-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page - 10 }}">Previous 10</a>
+            {% endif %}
+    
+            {% if page > 1 %}
+                <a class="previous-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page - 1 }}">Previous</a>
+            {% endif %}
+    
+            {% set start_page = page - 5 if page - 5 > 0 else 1 %}
+            {% set end_page = start_page + 9 if start_page + 9 <= total_pages else total_pages %}
+    
+            {% for i in range(start_page, end_page + 1) %}
+                {% if i == page %}
+                    <button class="current-page" disabled>{{ i }}</button>
+                {% else %}
+                    <a class="other-pages" href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+    
+            
+    
+            {% if results|length == RESULTS_PER_PAGE and end_page < total_pages %}
+                <a class="next-button" href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ end_page + 1 }}">Next 10</a>
+            {% endif %}
+    
+            {% if page + 10 <= total_pages %}
+                <a class="next-button" href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 10 }}">Next 10</a>
+            {% endif %}
+    
+            {% if page < total_pages %}
+                <a class="next-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
+            {% endif %}
+            {% if g.user %}
+            <button class="delete-button" type="button" onclick="deleteSelected()">Delete Selected Constructors</button>
+            <button class="update-button" type="button" onclick="updateBackend()">Update</button>
+        {% endif%}
+        </nav>
+    {% else %}
+        <strong>No results found!</strong>
+    {% endif %}
+
+    
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var rows = document.querySelectorAll('.constructor-row');
 
         rows.forEach(function(row) {
-            var editBtn = row.querySelector('.edit-btn');
+            var details = row.querySelector('.go-details');
 
             row.addEventListener('click', function(event) {
                 // Check if the clicked element is the edit button
-                if (event.target !== editBtn) {
+                if (event.target === details) {
                     var constructorRef = row.getAttribute('data-constructor-ref');
                     var url = '{{ url_for("constructors.details", constructorRef="", _external=True) }}' + constructorRef + '/details';
                     window.location.href = url.replace('//details', '/');
@@ -121,29 +155,120 @@
     });
 </script>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var editBtns = document.querySelectorAll('.edit-btn');
+function handleCheckboxClick(checkbox) {
+    // Stop the propagation of the click event to prevent navigation
+    event.stopPropagation();
+    // Get the row associated with the checkbox
+    var row = checkbox.closest('.constructor-row');
+    // Toggle the 'selected' class on the row
+    row.classList.toggle('selected');
+  
+    // Update the list of selected constructor IDs
+    updateSelectedConstructors();
+  }
 
-        editBtns.forEach(function(editBtn) {
-            editBtn.addEventListener('click', function() {
-                var row = editBtn.closest('tr');
-                var editableCells = row.querySelectorAll('.editable');
+  function updateSelectedConstructors() {
+  var selectedConstructors = document.querySelectorAll('.constructor-row.selected');
+  var constructorIds = [];
 
-                editableCells.forEach(function(cell) {
-                    var currentValue = cell.textContent;
-                    var inputField = document.createElement('input');
-                    inputField.value = currentValue;
-                    cell.innerHTML = '';
-                    cell.appendChild(inputField);
-                });
-            });
+  // Iterate over selected rows and extract constructors IDs
+  selectedConstructors.forEach(function (row) {
+    var constructorId = row.getAttribute('data-constructorId');
+    constructorIds.push(constructorId);
+  });
+
+  // Update the hidden input with the selected driver IDs
+  document.getElementById('constructorIds').value = JSON.stringify(constructorIds);
+  console.log(constructorIds)
+}
+
+  function updateBackend() {
+    var rows = document.querySelectorAll('.constructor-row');
+    var updatedData = [];
+
+    rows.forEach(function (row) {
+        var constructorId = row.getAttribute('data-constructorId');
+        var constructorRef = row.querySelector('.editable input[id="constructorRef"]').value;
+        var name = row.querySelector('.editable input[id="name"]').value;
+        var nationality = row.querySelector('.editable input[id="nationality"]').value;
+        var url = row.querySelector('.editable input[id="url"]').value;
+
+        updatedData.push({
+        constructorId: constructorId,
+        constructorRef: constructorRef,
+        name: name,
+        nationality: nationality,
+        url: url
+        // Add more fields as needed
         });
     });
-</script>
 
+    // Make an AJAX request to update the backend
+    fetch('http://127.0.0.1:5000/constructors/update', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: updatedData }),
+    })
+        .then(response => response.json())
+        .then(data => {
+        // Handle the response from the server if needed
+        console.log('Update successful', data);
+        })
+        .catch(error => {
+        console.error('Error updating backend', error);
+        });
+        window.location.reload(true)
+}
+
+
+
+function handleButtonClick(button) {
+    event.stopPropagation();
+    var row = button.closest('.constructor-row');
+    var editableCells = row.querySelectorAll('.editable');
+
+    // Toggle visibility of text and input elements within the row
+    editableCells.forEach(function (editableCell) {
+        var spanElement = editableCell.querySelector('span');
+        var inputElement = editableCell.querySelector('input');
+
+        spanElement.style.display = spanElement.style.display === 'none' ? 'inline' : 'none';
+        inputElement.style.display = inputElement.style.display === 'none' ? 'inline' : 'none';
+    });
+}
+
+function deleteSelected() {
+  // Retrieve the list of selected driver IDs from the hidden input
+  var constructorIds = JSON.parse(document.getElementById('constructorIds').value);
+  // Send the selected driver IDs to the server using AJAX
+  fetch('/constructors/delete', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json', // Add this line
+    },
+    body: JSON.stringify({ constructorIds: constructorIds }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success: ', data);
+      // Optionally, update the UI or perform other actions based on the server response
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // Handle errors as needed
+    });
+  window.location.reload(true)
+}
+</script>
 
 </body>
 {% endblock %}
-

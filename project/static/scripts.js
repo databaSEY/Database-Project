@@ -178,4 +178,3 @@ function updateBackend() {
 function onCreateDriver() {
   window.location.reload(true);
 }
-

@@ -11,9 +11,40 @@ bp = Blueprint('home', __name__)
 @bp.route('/')
 def index():
     db = get_db()
-    # posts = db.execute(
-    #     'SELECT p.id, title, body, created, author_id, username'
-    #     ' FROM post p JOIN user u ON p.author_id = u.id'
-    #     ' ORDER BY created DESC'
-    # ).fetchall()
-    return render_template('home/index.html')
+    top_drivers_query = (
+       ' select distinct' 
+        ' ROW_NUMBER() OVER (ORDER BY SUM(ds.wins) DESC) AS row_num, '
+        ' d.forename, '
+        ' d.surname,' 
+        ' SUM(ds.wins) as sum_of_wins'
+        ' FROM driver_standings ds'
+        ' JOIN drivers d on d.driverId = ds.driverId'
+        ' GROUP BY ds.driverId'
+        ' ORDER BY sum_of_wins desc'
+        ' LIMIT 5'
+    )
+    top_constructors_query = (
+       ' SELECT '
+        ' ROW_NUMBER() OVER (ORDER BY SUM(cs.wins) DESC) AS row_num,'
+        ' c.name,'
+        ' c.nationality,'
+        ' SUM(cs.wins) AS sum_of_wins'
+        ' FROM constructor_standings cs'
+        ' JOIN constructors c ON c.constructorId = cs.constructorId '
+        ' GROUP BY cs.constructorId'
+        ' ORDER BY sum_of_wins DESC'
+        ' LIMIT 5'
+    )
+    last_races_query = (
+        'SELECT'
+        ' ROW_NUMBER() OVER (ORDER BY date) AS row_num,'
+        ' r.name,'
+        ' r.date '
+        ' FROM races r'
+        ' ORDER BY r.date'
+        ' LIMIT 5'
+    )
+    top_drivers = db.execute( top_drivers_query, ).fetchall()
+    top_constructors = db.execute( top_constructors_query, ).fetchall()
+    last_races = db.execute( last_races_query, ).fetchall()
+    return render_template('home/index.html', top_drivers=top_drivers, top_constructors=top_constructors, last_races=last_races)
