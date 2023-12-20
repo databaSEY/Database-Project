@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<body>
+    <h1 style="color:white">About Us</h1>
+<div class="container" style="margin:100px;">
+    <div class="row">
+        <div style="float: left; margin-right: 100px; margin-left:250px; background-color: #333; padding: 10px;">
+            <img src="{{url_for('static', filename='semih.jpg')}}" width="200" height="200">
+            <p style="color:white; text-align: center"><b>Semih Gençten</b></p>
+        </div>
+        <div style="float: left; margin-right: 100px; background-color: #333; padding: 10px;">
+            <img src="{{url_for('static', filename='eda.JPG')}}" width="200" height="200">
+            <p style="color:white; text-align: center"><b>Eda Işık</b></p>
+        </div>
+        <div style="float: left; background-color: #333; padding: 10px;">
+            <img src="{{url_for('static', filename='yasin.jpg')}}" width="200" height="200">
+            <p style="color:white; text-align: center"><b>Yasin İbiş</b></p>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+</body>
+{% endblock %}
