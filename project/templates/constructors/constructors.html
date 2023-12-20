@@ -142,7 +142,6 @@
 
     
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var rows = document.querySelectorAll('.constructor-row');
@@ -211,7 +210,6 @@ function handleCheckboxClick(checkbox) {
         });
     });
 
-
     // Make an AJAX request to update the backend
     fetch('http://127.0.0.1:5000/constructors/update', {
         method: 'POST',
@@ -232,72 +230,6 @@ function handleCheckboxClick(checkbox) {
 }
 
 
-
-    // Make an AJAX request to update the backend
-    fetch('http://127.0.0.1:5000/constructors/update', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data: updatedData }),
-    })
-        .then(response => response.json())
-        .then(data => {
-        // Handle the response from the server if needed
-        console.log('Update successful', data);
-        })
-        .catch(error => {
-        console.error('Error updating backend', error);
-        });
-        window.location.reload(true)
-}
-
-
-
-function handleButtonClick(button) {
-    event.stopPropagation();
-    var row = button.closest('.constructor-row');
-    var editableCells = row.querySelectorAll('.editable');
-
-    // Toggle visibility of text and input elements within the row
-    editableCells.forEach(function (editableCell) {
-        var spanElement = editableCell.querySelector('span');
-        var inputElement = editableCell.querySelector('input');
-
-        spanElement.style.display = spanElement.style.display === 'none' ? 'inline' : 'none';
-        inputElement.style.display = inputElement.style.display === 'none' ? 'inline' : 'none';
-    });
-}
-
-function deleteSelected() {
-  // Retrieve the list of selected driver IDs from the hidden input
-  var constructorIds = JSON.parse(document.getElementById('constructorIds').value);
-  // Send the selected driver IDs to the server using AJAX
-  fetch('/constructors/delete', {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json', // Add this line
-    },
-    body: JSON.stringify({ constructorIds: constructorIds }),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Success: ', data);
-      // Optionally, update the UI or perform other actions based on the server response
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      // Handle errors as needed
-    });
-  window.location.reload(true)
-}
-</script>
 
 function handleButtonClick(button) {
     event.stopPropagation();
