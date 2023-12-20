@@ -1,2 +1,100 @@
 {% extends 'base.html' %}
 
+{% block content %}
+<body>
+
+    <h2>Top Drivers</h2>
+    <table>
+        <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Forename</th>
+        <th>Surname</th>
+        <th>Wins</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+        {% for driver in top_drivers %}
+      <tr>
+        <td>
+            <span>{{ driver['row_num'] }}</span>
+        </td>
+        <td>
+            <span>{{ driver['forename'] }}</span>
+        </td>
+        <td>
+            <span>{{ driver['surname'] }}</span>
+        </td>
+        <td>
+            <span>{{ driver['sum_of_wins'] }}</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+      <!-- Rows from your query go here -->
+    </table>
+
+    <h2>Top Constructors</h2>
+<table>
+    <thead>
+  <tr>
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Nationality</th>
+    <th>Wins</th>
+  </tr>
+</thead>
+<tbody>
+    {% for constructor in top_constructors %}
+  <tr>
+    <td>
+        <span>{{ constructor['row_num'] }}</span>
+    </td>
+    <td>
+        <span>{{ constructor['name'] }}</span>
+    </td>
+    <td>
+        <span>{{ constructor['nationality'] }}</span>
+    </td>
+    <td>
+        <span>{{ constructor['sum_of_wins'] }}</span>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+  <!-- Rows from your query go here -->
+</table>
+    
+<h2>Last Races</h2>
+<table>
+    <thead>
+  <tr>
+    <th>Num</th>
+    <th>Name</th>
+    <th>Date</th>
+    <th>URL</th>
+  </tr>
+</thead>
+<tbody>
+    {% for race in last_races %}
+  <tr>
+    <td>
+        <span>{{ race['row_num'] }}</span>
+    </td>
+    <td>
+        <span>{{ race['name'] }}</span>
+    </td>
+    <td>
+        <span>{{ race['date'] }}</span>
+    </td>
+    <td>
+        <span>{{ race['url'] }}</span>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+  <!-- Rows from your query go here -->
+</table>
+    </body>
+{% endblock %}
