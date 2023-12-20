@@ -49,7 +49,7 @@
 
       <label for="nationality">Nationality:</label>
       <select id="nationality" name="nationality">
-        <option value="">All</option> <!-- Updated this line -->
+        <option value="" {% if not selected_nationality %}selected{% endif %}>All</option>
         {% if distinct_nationalities %}
         <p>Data exists: {{ distinct_nationalities }}</p>
         {% for nationality in distinct_nationalities %}

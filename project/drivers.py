@@ -19,8 +19,13 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
 
     db = get_db()
     
-    if not nationality_filter:
-        nationality_filter = None
+    if not nationality_filter or nationality_filter == 'None': # to solve filtering bug
+        nationality_filter=None
+        print("none made1112222")
+    else:
+        print(nationality_filter)
+    # to solve the pagination problem, I checked all cases, tried to understand what is coming from the html while it's giving error
+    # To understand I put this condition and saw that "None" is coming. to fix this, i put the check above
     if search_term and search_term_surname:
         print("firsttt")
         query = (
@@ -30,9 +35,11 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
             ' ORDER BY d.driverId'
             f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
         )
-        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ?', (f'{search_term}%',)).fetchone()[0]
         search_term_with_percent = f'{search_term}%'
         search_term_surname_with_percent = f'{search_term_surname}%'
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND surname LIKE ? AND (CASE WEHN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
+        (search_term_with_percent, search_term_surname_with_percent, nationality_filter, nationality_filter)).fetchone()[0]
+        
         posts = db.execute(query, (search_term_with_percent, search_term_surname_with_percent,nationality_filter, nationality_filter)).fetchall()
     elif search_term:
         # If a search term is provided, filter the results based on the first name
@@ -43,8 +50,10 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
             ' ORDER BY d.driverId'
             f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
         )
-        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ?', (f'{search_term}%',)).fetchone()[0]
         search_term_with_percent = f'{search_term}%'
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=?)', 
+        (search_term_with_percent, nationality_filter, nationality_filter)).fetchone()[0]
+
         posts = db.execute(query, (search_term_with_percent, nationality_filter, nationality_filter)).fetchall()
     else:
         # If no search term, retrieve all drivers
@@ -57,6 +66,7 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
         )
         total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE 1=1 AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
         (nationality_filter, nationality_filter)).fetchone()[0]
+        print(f"no search term, total drivers: {total_drivers}")
         posts = db.execute(query, (nationality_filter, nationality_filter)).fetchall()
 
     total_pages = ceil(total_drivers / RESULTS_PER_PAGE)   
@@ -104,16 +114,19 @@ def driver_details(driver_id):
     name = db.execute(name_query, ).fetchone()
     print(name)
 
-    details_query = (
-        f'select  d.forename, d.surname, r.year , r.name, ds.position, ds.points'
-        ' from drivers d'
-        ' join driver_standings ds on d.driverId = ds.driverId'
-        ' join races r on ds.raceId = r.raceId'
-        f' where d.driverId = {driver_id} '
-        ' order by position '
-        ' limit 10'
+    details_query = ('select  d.forename, d.surname, r.year , r.name, ds.position, ds.points, bestLap.time as time'
+            ' from drivers d'
+            ' join driver_standings ds on d.driverId = ds.driverId'
+            ' join races r on ds.raceId = r.raceId'
+            ' join ('
+            ' SELECT l.raceId, l.driverId, MIN(l.time) AS time FROM laptimes l GROUP BY l.raceId, l.driverId'
+            ' ) AS bestLap'
+            ' ON bestLap.raceId = r.raceId AND bestLap.driverId = d.driverId'
+            ' where d.driverId = ?'
+            ' order by position '
+            ' limit 10'
     )
-    details = db.execute(details_query, ).fetchall()
+    details = db.execute(details_query, (driver_id, )).fetchall()
 
     return render_template('drivers/details.html', name=name, details=details)
 
@@ -200,4 +213,6 @@ def update():
         # Handle exceptions as needed
         print('Error updating backend:', e)
         return jsonify({'error': 'Internal Server Error'}), 500
+################################
+
 
