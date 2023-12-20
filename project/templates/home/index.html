@@ -1,9 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    table {
+        width: 80%; /* Set the overall width of the table */
+        border-collapse: collapse;
+        margin: 20px; /* Add some margin for better spacing */
+    }
+
+    th, td {
+        border: 1px solid white; /* Add borders for better visibility */
+        padding: 8px; /* Add padding for better spacing */
+        text-align: left;
+    }
+
+    h2 {
+        color: white;
+    }
+</style>
+</head>
 <body>
 
-    <h2>Top Drivers</h2>
+    <h2 style="color: white"  >Top Drivers</h2>
+
     <table>
         <thead>
       <tr>
@@ -35,7 +57,9 @@
       <!-- Rows from your query go here -->
     </table>
 
-    <h2>Top Constructors</h2>
+
+    <h2 style="color: white"  >Top Constructors</h2>
+
 <table>
     <thead>
   <tr>
@@ -66,14 +90,16 @@
   <!-- Rows from your query go here -->
 </table>
     
-<h2>Last Races</h2>
+
+<h2 style="color: white"  >Last Races</h2>
+
 <table>
     <thead>
   <tr>
     <th>Num</th>
     <th>Name</th>
     <th>Date</th>
-    <th>URL</th>
+
   </tr>
 </thead>
 <tbody>
@@ -87,9 +113,6 @@
     </td>
     <td>
         <span>{{ race['date'] }}</span>
-    </td>
-    <td>
-        <span>{{ race['url'] }}</span>
     </td>
   </tr>
   {% endfor %}

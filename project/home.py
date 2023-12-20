@@ -39,10 +39,9 @@ def index():
         'SELECT'
         ' ROW_NUMBER() OVER (ORDER BY date) AS row_num,'
         ' r.name,'
-        ' r.date,'
-        ' r.url'
+        ' r.date '
         ' FROM races r'
-        ' ORDER BY date'
+        ' ORDER BY r.date'
         ' LIMIT 5'
     )
     top_drivers = db.execute( top_drivers_query, ).fetchall()

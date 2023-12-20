@@ -109,7 +109,6 @@ def index():
 @bp.route('/drivers/driver_details/<int:driver_id>/details')
 def driver_details(driver_id):
     db = get_db()
-
     name_query = f"SELECT d.forename, d.surname FROM drivers d where d.driverId = {driver_id}"
     name = db.execute(name_query, ).fetchone()
     print(name)
@@ -127,7 +126,6 @@ def driver_details(driver_id):
             ' limit 10'
     )
     details = db.execute(details_query, (driver_id, )).fetchall()
-
     return render_template('drivers/details.html', name=name, details=details)
 
 @bp.route('/drivers/create', methods=('GET', 'POST'))
