@@ -119,7 +119,7 @@
 
 .formula1-template .map-container {
     height: 200px;
-    width: 800px;
+    max-width: 100%;
 }
 
 .formula1-template .img-container {
@@ -211,6 +211,148 @@
             // Add a marker at the specified coordinates
             L.marker([lat, lon]).addTo(map);
     }
+    
+function deleteSelectedRaces() {
+  // Retrieve the list of selected driver IDs from the hidden input
+  var race_ids = JSON.parse(document.getElementById('race_ids').value);
+  console.log("delete_function_isrunning")
+  // Send the selected driver IDs to the server using AJAX
+  fetch('/races/delete', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json', // Add this line
+    },
+    body: JSON.stringify({ race_ids: race_ids }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      // Optionally, update the UI or perform other actions based on the server response
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // Handle errors as needed
+    });
+  window.location.reload()
+}
+// Function to handle checkbox click
+function handleCheckboxClick(checkbox) {
+  // Stop the propagation of the click event to prevent navigation
+  event.stopPropagation();
+  // Get the row associated with the checkbox
+  var row = checkbox.closest('.race-row');
+
+  // Toggle the 'selected' class on the row
+  row.classList.toggle('selected');
+
+  // Update the list of selected driver IDs
+  updateSelectedRaces();
+}
+
+function updateSelectedRaces() {
+  var selectedRaces = document.querySelectorAll('.race-row.selected');
+  var raceIds = [];
+
+  // Iterate over selected rows and extract driver IDs
+  selectedRaces.forEach(function (row) {
+    var raceId = row.getAttribute('data-race-id');
+    raceIds.push(raceId);
+  });
+
+  // Update the hidden input with the selected driver IDs
+  document.getElementById('race_ids').value = JSON.stringify(raceIds);
+}
+
+function handleButtonClick(button, index) {
+  event.stopPropagation();
+
+  // Get all rows with the class '.race-row'
+  var rows = document.querySelectorAll('.edit-'+index);
+
+  // Loop through each row
+  rows.forEach(function (row) {
+    var editableCells = row.querySelectorAll('.editable');
+
+    // Toggle visibility of text and input elements within the row
+    editableCells.forEach(function (editableCell) {
+      var spanElement = editableCell.querySelector('span');
+      var inputElement = editableCell.querySelector('input');
+
+      spanElement.style.display = spanElement.style.display === 'none' ? 'inline' : 'none';
+      inputElement.style.display = inputElement.style.display === 'none' ? 'inline' : 'none';
+    });
+  });
+}
+
+
+function updateBackend() {
+  var rows = document.querySelectorAll('.update-row');
+  var updatedData = [];
+  console.log(rows);
+  var sw = 0;
+  rows.forEach(function (row) {
+    // Switch statement
+    switch (sw) {
+        case 0:
+            var raceId = row.getAttribute('data-race-id');
+            var circuitId = row.getAttribute('data-circuit-id');
+            var r_name = row.querySelector('.editable [id="r_name"]').value;
+            var r_year = row.querySelector('.editable [id="r_year"]').value;
+            var c_country = row.querySelector('.editable [id="c_country"]').value;
+            sw = 1;
+            break;
+        case 1:
+            var r_date = row.querySelector('.editable [id="r_date"]').value;
+            var r_round = row.querySelector('.editable [id="r_round"]').value;
+            var c_location = row.querySelector('.editable [id="c_location"]').value;
+            sw = 2;
+            break;
+
+        case 2:
+            var c_name = row.querySelector('.editable [id="c_name"]').value;
+            sw = 0;
+            break;
+    }
+    updatedData.push({
+      raceId: raceId,
+      r_name: r_name,
+      r_year: r_year,
+      r_date: r_date,
+      r_round: r_round,
+      circuitId: circuitId,
+      c_name: c_name,
+      c_location: c_location,
+      c_country: c_country
+      // Add more fields as needed
+    });
+   
+  }
+
+  );
+
+  // Make an AJAX request to update the backend
+  fetch('/races/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ data: updatedData }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the server if needed
+      console.log('Update successful', data);
+    })
+    .catch(error => {
+      console.error('Error updating backend', error);
+    });
+}
 
     </script>
     {% if results %}
@@ -220,20 +362,39 @@
                 <th>Name</th>
                 <th>Year</th>
                 <th>Country</th>
+                {% if g.user %}
+                <th>Delete</th>
+                <th>Edit</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for result in results %}
-                <tr>
-                    <td onclick="toggleDetails({{ loop.index }})">{{ result[0] }}</td>
-                    <td>{{ result[1] }}</td>
-                    <td>{{ result[5] }}</td>
+                <tr class="race-row edit-{{loop.index}} update-row" data-race-id="{{ result[10] }}" data-circuit-id="{{ result[11] }}">
+                    <td class="editable" onclick="toggleDetails({{ loop.index }}) "><span>{{ result[0] }}</span>
+                        <input id="r_name" type="text" class="update-input" value="{{ result[0] }}" style="display: none;">
+                    </td>
+                    <td class="editable"><span>{{ result[1] }}</span>
+                        <input id="r_year" type="text" class="update-input" value="{{ result[1] }}" style="display: none;">
+                    </td>
+                    <td class="editable"><span>{{ result[5] }}</span>
+                        <input id="c_country" type="text" class="update-input" value="{{ result[5] }}" style="display: none;">
+                    </td>
+                    {% if g.user %}
+                    <td>
+                    <input type="checkbox" onclick="handleCheckboxClick(this)">
+                    </td>
+                    <td>
+                        <button class="edit-button" type="button" onclick="handleButtonClick(this,{{  loop.index}})">Edit</button>
+                    </td>
+                    {% endif %}
                 </tr>
                 {% include 'details.html' %}
-                
+
             {% endfor %}
         </tbody>
     </table>
+    <input type="hidden" id="race_ids" name="race_ids">
     <nav>
 
         {% if page > 10 %}
@@ -269,8 +430,46 @@
             <a href="?search={{ search_term }}&year={{ selected_year }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
         {% endif %}
     </nav>
-    
+    {% endif %}
 
+    {% if g.user %}
+    <button class="delete-button" type="button" onclick="deleteSelectedRaces()">Delete Selected Races</button>
+    <button class="update-button" type="button" onclick="updateBackend()">Update</button>
+    <form class="create" method="post" action="{{ url_for('races.create') }}">
+
+    <!-- Circuit Section -->
+    <label for="c_name">Circuit Name:</label>
+    <input class="create-input" type="text" id="c_name" name="c_name" required>
+
+    <label for="c_location">Circuit Location:</label>
+    <input class="create-input" type="text" id="c_location" name="c_location" required>
+
+    <label for="c_country">Circuit Location:</label>
+    <input class="create-input" type="text" id="c_country" name="c_country" required>
+
+    <label for="c_lat">Circuit Latitude:</label>
+    <input class="create-input" type="number" step="any" id="c_lat" name="c_lat">
+
+    <label for="c_lng">Circuit Longitude:</label>
+    <input class="create-input" type="number" step="any" id="c_lng" name="c_lng">
+
+
+    <!-- Race Section -->
+    <label for="r_name">Race Name:</label>
+    <input class="create-input" type="text" id="r_name" name="r_name" required>
+
+    <label for="r_year">Race Year:</label>
+    <input class="create-input" type="number" id="r_year" name="r_year" required>
+
+    <label for="r_date">Race Date:</label>
+    <input class="create-input" type="date" id="r_date" name="r_date">
+
+    <label for="r_round">Race Round:</label>
+    <input class="create-input" type="number" id="r_round" name="r_round">
+  
+      <button type="submit">Create</button>
+
+    </form>
     {% endif %}
 </body>
 </html>
