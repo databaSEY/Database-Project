@@ -44,14 +44,17 @@ def get_search_results(search_term, year_filter, country_filter, page):
         query += f" AND c.country = '{country_filter}'"
         race_results_query += f" AND c.country = '{country_filter}'"
         total_count_query += f" AND c.country = '{country_filter}'"
-
+        
+    query +=" ORDER BY r.raceId"
     query += f" LIMIT {RESULTS_PER_PAGE} OFFSET {offset}"
+    
+    race_results_query += " ORDER BY r.raceId, rs.position"
     race_results_query += f" LIMIT {RESULTS_PER_PAGE} OFFSET {offset}"
+
     
     results = db.execute(query).fetchall()
     race_results = db.execute(race_results_query).fetchall()
-    race_results = sorted(race_results, key=lambda x: (x[-1], x[3]))
-
+    #race_results = sorted(race_results, key=lambda x: (x[-1], x[3]))
 
     total_count = db.execute(total_count_query).fetchone()[0]
     total_pages = ceil(total_count / RESULTS_PER_PAGE)

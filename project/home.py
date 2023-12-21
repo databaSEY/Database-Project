@@ -41,7 +41,7 @@ def index():
         ' r.name,'
         ' r.date '
         ' FROM races r'
-        ' ORDER BY r.date'
+        ' ORDER BY r.date DESC'
         ' LIMIT 5'
     )
     top_drivers = db.execute( top_drivers_query, ).fetchall()

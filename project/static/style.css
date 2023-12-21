@@ -37,7 +37,8 @@ button:hover {
 }
 
 .pagination-drivers {
-    margin: 20px auto;
+    margin: 0px auto;
+    background-color: rgba(200, 200, 200, 0.7);;
     text-align: center;
 }
 

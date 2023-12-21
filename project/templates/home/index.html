@@ -5,119 +5,136 @@
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   <style>
-    table {
-        width: 80%; /* Set the overall width of the table */
-        border-collapse: collapse;
-        margin: 20px; /* Add some margin for better spacing */
+    .table-container-home {
+      display: flex;
+      justify-content: space-between;
     }
 
-    th, td {
-        border: 1px solid white; /* Add borders for better visibility */
-        padding: 8px; /* Add padding for better spacing */
-        text-align: left;
+    .table-wrapper-home {
+      width: 30%;
+      /* Adjust the width as needed */
+      margin: 10px;
+    }
+
+    table {
+      width: 90%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid white;
+      padding: 8px;
+      text-align: left;
     }
 
     h2 {
-        color: white;
+      color: white;
     }
-</style>
+  </style>
 </head>
+
 <body>
+  <div class="table-container-home">
+    <div class="table-wrapper-home">
+      <h2 style="color: white">Top Drivers</h2>
 
-    <h2 style="color: white"  >Top Drivers</h2>
-
-    <table>
+      <table>
         <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Forename</th>
-        <th>Surname</th>
-        <th>Wins</th>
-      </tr>
-    </thead>
-    
-    <tbody>
-        {% for driver in top_drivers %}
-      <tr>
-        <td>
-            <span>{{ driver['row_num'] }}</span>
-        </td>
-        <td>
-            <span>{{ driver['forename'] }}</span>
-        </td>
-        <td>
-            <span>{{ driver['surname'] }}</span>
-        </td>
-        <td>
-            <span>{{ driver['sum_of_wins'] }}</span>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-      <!-- Rows from your query go here -->
-    </table>
+          <tr>
+            <th>Rank</th>
+            <th>Forename</th>
+            <th>Surname</th>
+            <th>Wins</th>
+          </tr>
+        </thead>
 
+        <tbody>
+          {% for driver in top_drivers %}
+          <tr>
+            <td>
+              <span>{{ driver['row_num'] }}</span>
+            </td>
+            <td>
+              <span>{{ driver['forename'] }}</span>
+            </td>
+            <td>
+              <span>{{ driver['surname'] }}</span>
+            </td>
+            <td>
+              <span>{{ driver['sum_of_wins'] }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <!-- Rows from your query go here -->
+      </table>
+    </div>
 
-    <h2 style="color: white"  >Top Constructors</h2>
+    <div class="table-wrapper-home">
+      <h2 style="color: white">Top Constructors</h2>
 
-<table>
-    <thead>
-  <tr>
-    <th>Rank</th>
-    <th>Name</th>
-    <th>Nationality</th>
-    <th>Wins</th>
-  </tr>
-</thead>
-<tbody>
-    {% for constructor in top_constructors %}
-  <tr>
-    <td>
-        <span>{{ constructor['row_num'] }}</span>
-    </td>
-    <td>
-        <span>{{ constructor['name'] }}</span>
-    </td>
-    <td>
-        <span>{{ constructor['nationality'] }}</span>
-    </td>
-    <td>
-        <span>{{ constructor['sum_of_wins'] }}</span>
-    </td>
-  </tr>
-  {% endfor %}
-</tbody>
-  <!-- Rows from your query go here -->
-</table>
-    
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Nationality</th>
+            <th>Wins</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for constructor in top_constructors %}
+          <tr>
+            <td>
+              <span>{{ constructor['row_num'] }}</span>
+            </td>
+            <td>
+              <span>{{ constructor['name'] }}</span>
+            </td>
+            <td>
+              <span>{{ constructor['nationality'] }}</span>
+            </td>
+            <td>
+              <span>{{ constructor['sum_of_wins'] }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <!-- Rows from your query go here -->
+      </table>
+    </div>
 
-<h2 style="color: white"  >Last Races</h2>
+    <div class="table-wrapper-home">
+      <h2 style="color: white">Last Races</h2>
 
-<table>
-    <thead>
-  <tr>
-    <th>Num</th>
-    <th>Name</th>
-    <th>Date</th>
+      <table>
+        <thead>
+          <tr>
+            <th>Num</th>
+            <th>Name</th>
+            <th>Date</th>
 
-  </tr>
-</thead>
-<tbody>
-    {% for race in last_races %}
-  <tr>
-    <td>
-        <span>{{ race['row_num'] }}</span>
-    </td>
-    <td>
-        <span>{{ race['name'] }}</span>
-    </td>
-    <td>
-        <span>{{ race['date'] }}</span>
-    </td>
-  </tr>
-  {% endfor %}
-</tbody>
-  <!-- Rows from your query go here -->
-</table>
-    </body>
+          </tr>
+        </thead>
+        <tbody>
+          {% for race in last_races %}
+          <tr>
+            <td>
+              <span>{{ race['row_num'] }}</span>
+            </td>
+            <td>
+              <span>{{ race['name'] }}</span>
+            </td>
+            <td>
+              <span>{{ race['date'] }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <!-- Rows from your query go here -->
+      </table>
+    </div>
+  </div>
+</body>
 {% endblock %}

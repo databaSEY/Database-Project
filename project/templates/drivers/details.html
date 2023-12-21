@@ -3,17 +3,20 @@
 {% block title %}Details for {{ name.forename }} {{ name.surname }}{% endblock %}
 {% block header %}
 <head>
+    <div class="header-container">
+        <h1><a class="home-button" href="{{ url_for('index') }}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/1920px-F1.svg.png" alt="Formula1 Logo"></a></h1>
+    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{const_name}} Details</title>
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <h1 class="mb-4">{{const_name}} Details for {{ name.forename }} {{ name.surname }}</h1>
+    
 </head>
 {% endblock %}
 {% block content %}
 <body>
-
+    <h1 style="color: white">{{const_name}} Details for {{ name.forename }} {{ name.surname }}</h1>
 <div class="container mt-4">
 
     

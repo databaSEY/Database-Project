@@ -118,4 +118,9 @@ CREATE TABLE status (
     statusId INTEGER PRIMARY KEY, 
     status VARCHAR
 )
- 
+
+CREATE TABLE admin (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
+);
