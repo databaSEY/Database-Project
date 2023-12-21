@@ -21,7 +21,6 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
     
     if not nationality_filter or nationality_filter == 'None': # to solve filtering bug
         nationality_filter=None
-        print("none made1112222")
     else:
         print(nationality_filter)
     # to solve the pagination problem, I checked all cases, tried to understand what is coming from the html while it's giving error
@@ -37,7 +36,7 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
         )
         search_term_with_percent = f'{search_term}%'
         search_term_surname_with_percent = f'{search_term_surname}%'
-        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND surname LIKE ? AND (CASE WEHN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND surname LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
         (search_term_with_percent, search_term_surname_with_percent, nationality_filter, nationality_filter)).fetchone()[0]
         
         posts = db.execute(query, (search_term_with_percent, search_term_surname_with_percent,nationality_filter, nationality_filter)).fetchall()
@@ -50,11 +49,26 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
             ' ORDER BY d.driverId'
             f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
         )
+        print("there is search term")
         search_term_with_percent = f'{search_term}%'
         total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
         (search_term_with_percent, nationality_filter, nationality_filter)).fetchone()[0]
 
         posts = db.execute(query, (search_term_with_percent, nationality_filter, nationality_filter)).fetchall()
+    elif search_term_surname:
+        search_term_surname_with_percent = f'{search_term_surname}%'
+        query = (
+            'SELECT d.driverId, d.driverRef, d.forename, d.surname, d.nationality'
+            ' FROM drivers d'
+            f' WHERE d.surname LIKE ? AND (? IS NULL OR d.nationality =?)'
+            ' ORDER BY d.driverId'
+            f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
+        )
+        total_drivers = db.execute(f'SELECT COUNT(*) FROM drivers WHERE surname LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
+        (search_term_surname_with_percent, nationality_filter, nationality_filter)).fetchone()[0]
+        print("only surname")
+
+        posts = db.execute(query, (search_term_surname_with_percent, nationality_filter, nationality_filter)).fetchall()
     else:
         # If no search term, retrieve all drivers
         query = (
@@ -88,7 +102,7 @@ def index():
     nationality_filter = request.args.get('nationality', default=None)
     offset = (page - 1) * drivers_per_page
     
-
+    print(search_term_surname)
     posts, drivers_per_page, total_drivers, distinct_nationalities, total_pages = get_search_results(search_term, 
                                                                                         search_term_surname,
                                                                                         drivers_per_page,
@@ -97,14 +111,16 @@ def index():
                                                                                         page
                                                                                         )
 
-
-
+    
+    print(search_term)
     return render_template('drivers/index.html', posts=posts,  
                                                 total_pages = total_pages, 
                                                 page=page,
                                                 drivers_per_page=drivers_per_page,
                                                 distinct_nationalities=distinct_nationalities,
-                                                selected_nationality=nationality_filter)
+                                                selected_nationality=nationality_filter,
+                                                search_term=search_term,
+                                                search_term_surname=search_term_surname)
 
 @bp.route('/drivers/driver_details/<int:driver_id>/details')
 def driver_details(driver_id):

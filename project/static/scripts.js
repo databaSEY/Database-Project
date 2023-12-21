@@ -67,6 +67,7 @@ function toggleAdvancedSearch() {
   var advancedSearchDiv = document.getElementById("advanced-search");
   advancedSearchDiv.style.display = (advancedSearchDiv.style.display === "none") ? "block" : "none";
   console.log("Advanced Search visibility:", advancedSearchDiv.style.display);
+  saveAdvancedSearchState()
 }
 
 function saveAdvancedSearchState() {

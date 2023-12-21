@@ -19,7 +19,7 @@
     <h1 style="color: white">{{const_name}} Details for {{ name.forename }} {{ name.surname }}</h1>
 <div>
     <h2 style="color: white">Generak Information</h2>
-    <table class="table table-bordered">
+    <table class="table-container">
         {% if general_info %}
         <thead>
             <tr>
@@ -46,7 +46,8 @@
                     <td>{{ general_info.dob }}</td>
                     <td><a href={{ general_info.url }} style="text-decoration: underline;" target="_blank">Wiki Page</a></td>
                     <td>{{ general_info.sum_of_points }}</td>
-                    <td>{{ general_info.average_fastest_speed }}</td>
+                    <td>{{ '%0.2f'|format(general_info.average_fastest_speed) }}</td>
+
 
                 </tr>
             
@@ -57,12 +58,12 @@
     </table>    
     </table>
 </div>
-    <div class="container mt-4">
+    <div>
 
     
     <h2 style="color: white">Top 10 Races</h2>
 
-    <table class="table table-bordered">
+    <table class="table-container">
         {% if details %}
         <thead>
             <tr>

@@ -36,10 +36,10 @@
   
   <h1  style="color: white"  >Drivers</h1>
   
-  <form id="searchForm" action="{{ url_for('drivers.index') }}" method="GET" onsubmit="saveAndSubmitForms()">
+  <form id="searchForm" action="{{ url_for('drivers.index') }}" method="GET" >
     <label  style="color: white"   for="search">Search for Drivers:</label>
-    <input class="search-input" type="text" id="search" name="search" placeholder="Enter first name">
-    <input class="search-input" type="text" id="search_surname" name="search_surname" placeholder="Enter last name">
+    <input class="search-input" type="text" id="search" name="search" placeholder="Enter first name" value="{{search_term}}">
+    <input class="search-input" type="text" id="search_surname" name="search_surname" placeholder="Enter last name" value="{{search_term_surname}}">
     <button type="submit">Search</button>
 
     <button type="button" onclick="toggleAdvancedSearch()">Advanced Search</button>
@@ -117,11 +117,11 @@
   <nav class="pagination-drivers">
 
     {% if page > 10 %}
-        <a class="previous-button" href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page - 10 }}">Previous 10</a>
+        <a class="previous-button" href="?search={{ search_term }}&&search_surname={{search_term_surname}}&&nationality={{ selected_nationality }}&page={{ page - 10 }}">Previous 10</a>
     {% endif %}
 
     {% if page > 1 %}
-        <a class="previous-button"  href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page - 1 }}">Previous</a>
+        <a class="previous-button"  href="?search={{ search_term }}&&search_surname={{search_term_surname}}&&nationality={{ selected_nationality }}&page={{ page - 1 }}">Previous</a>
     {% endif %}
 
     {% set start_page = page - 5 if page - 5 > 0 else 1 %}
@@ -131,22 +131,22 @@
         {% if i == page %}
             <button class="current-page" disabled>{{ i }}</button>
         {% else %}
-            <a  class="other-pages" href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ i }}">{{ i }}</a>
+            <a  class="other-pages" href="?search={{ search_term }}&&search_surname={{search_term_surname}}&&nationality={{ selected_nationality }}&page={{ i }}">{{ i }}</a>
         {% endif %}
     {% endfor %}
 
     
 
     {% if results|length == RESULTS_PER_PAGE and end_page < total_pages %}
-        <a class="next-button" href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ end_page + 1 }}">Next 10</a>
+        <a class="next-button" href="?search={{ search_term }}&&search_surname={{search_term_surname}}&&nationality={{ selected_nationality }}&page={{ end_page + 1 }}">Next 10</a>
     {% endif %}
 
     {% if page + 10 <= total_pages %}
-        <a class="next-button" href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page + 10 }}">Next 10</a>
+        <a class="next-button" href="?search={{ search_term }}&&search_surname={{search_term_surname}}&&nationality={{ selected_nationality }}&page={{ page + 10 }}">Next 10</a>
     {% endif %}
 
     {% if page < total_pages %}
-        <a class="next-button" href="?search={{ search_term }}&&nationality={{ selected_nationality }}&page={{ page + 1 }}">Next</a>
+        <a class="next-button" href="?search={{ search_term }}&&search_surname={{search_term_surname}}&&nationality={{ selected_nationality }}&page={{ page + 1 }}">Next</a>
     {% endif %}
     {% if g.user %}
         <div class="user-actions">
