@@ -12,16 +12,16 @@ bp = Blueprint('home', __name__)
 def index():
     db = get_db()
     top_drivers_query = (
-       ' select distinct' 
-        ' ROW_NUMBER() OVER (ORDER BY SUM(ds.wins) DESC) AS row_num, '
-        ' d.forename, '
-        ' d.surname,' 
-        ' SUM(ds.wins) as sum_of_wins'
-        ' FROM driver_standings ds'
-        ' JOIN drivers d on d.driverId = ds.driverId'
-        ' GROUP BY ds.driverId'
-        ' ORDER BY sum_of_wins desc'
-        ' LIMIT 5'
+        'SELECT DISTINCT'
+        ' ROW_NUMBER() OVER (ORDER BY SUM(res.points) DESC) AS row_num, '
+         ' d.forename, '
+         ' d.surname,'
+         ' SUM(res.points) as sum_of_points'
+         ' FROM drivers d'
+  		 ' JOIN results res ON res.driverId=d.driverId'
+         ' GROUP BY d.driverId'
+         ' ORDER BY sum_of_points desc'
+         ' LIMIT 5'
     )
     top_constructors_query = (
        ' SELECT '

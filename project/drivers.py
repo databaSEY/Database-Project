@@ -51,7 +51,7 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
             f' LIMIT {RESULTS_PER_PAGE} OFFSET {offset}'
         )
         search_term_with_percent = f'{search_term}%'
-        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=?)', 
+        total_drivers = db.execute('SELECT COUNT(*) FROM drivers WHERE forename LIKE ? AND (CASE WHEN ? IS NULL THEN 1=1 ELSE nationality=? END)', 
         (search_term_with_percent, nationality_filter, nationality_filter)).fetchone()[0]
 
         posts = db.execute(query, (search_term_with_percent, nationality_filter, nationality_filter)).fetchall()
@@ -125,8 +125,27 @@ def driver_details(driver_id):
             ' order by position '
             ' limit 10'
     )
+    general_info_query = (
+        'SELECT '
+        ' d.forename,'
+        ' d.surname,'
+        ' d.nationality,'
+        ' d.driverRef,'
+        ' d.number,'
+        ' d.code,'
+        ' d.dob,'
+        ' d.url,'
+        ' SUM(res.points) AS sum_of_points'
+        ' , AVG(fastestLapSpeed) AS average_fastest_speed'
+        ' from drivers d'
+        ' JOIN results res on d.driverId=res.driverId '
+        ' JOIN races r ON r.raceId=res.raceId'
+        f' WHERE d.driverId = {driver_id}'
+        ' GROUP BY d.driverId'
+    )
     details = db.execute(details_query, (driver_id, )).fetchall()
-    return render_template('drivers/details.html', name=name, details=details)
+    general_info = db.execute(general_info_query, ).fetchone()
+    return render_template('drivers/details.html', name=name, details=details, general_info = general_info)
 
 @bp.route('/drivers/create', methods=('GET', 'POST'))
 @login_required

@@ -17,7 +17,47 @@
 {% block content %}
 <body>
     <h1 style="color: white">{{const_name}} Details for {{ name.forename }} {{ name.surname }}</h1>
-<div class="container mt-4">
+<div>
+    <h2 style="color: white">Generak Information</h2>
+    <table class="table table-bordered">
+        {% if general_info %}
+        <thead>
+            <tr>
+                <th>Forename</th>
+                <th>Last Name</th>
+                <th>Nationality</th>
+                <th>Driver-Ref</th>
+                <th>Number</th>
+                <th>Code</th>
+                <th>Birth Date</th>
+                <th>Wiki Page</th>
+                <th>Total Points</th>
+                <th>Average Fastest Lap Speed</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>{{ general_info.forename }}</td>
+                    <td>{{ general_info.surname }}</td>
+                    <td>{{ general_info.nationality }}</td>
+                    <td>{{ general_info.driverRef }}</td>
+                    <td>{{ general_info.number }}</td>
+                    <td>{{ general_info.code }}</td>
+                    <td>{{ general_info.dob }}</td>
+                    <td><a href={{ general_info.url }} style="text-decoration: underline;" target="_blank">Wiki Page</a></td>
+                    <td>{{ general_info.sum_of_points }}</td>
+                    <td>{{ general_info.average_fastest_speed }}</td>
+
+                </tr>
+            
+        </tbody>
+        {% else %}
+            <strong>No results found!</strong>
+        {% endif %}
+    </table>    
+    </table>
+</div>
+    <div class="container mt-4">
 
     
     <h2 style="color: white">Top 10 Races</h2>
