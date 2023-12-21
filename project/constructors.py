@@ -63,9 +63,7 @@ def details(constructorRef):
     id_query = f"SELECT constructorId FROM constructors WHERE constructorRef = '{constructorRef}'"
     const_id = con.execute(id_query).fetchone()[0]
 
-    #SELECT * FROM constructor_results WHERE constructorId=1 ORDER BY points DESC LIMIT 10
-
-    query = ('SELECT r.year, cr.raceId, r.name as r_name, c.name as c_name,   cr.points  ' 
+    query = ('SELECT r.year, cr.raceId, r.name as r_name, c.name as c_name, cr.points  ' 
              'FROM constructor_results cr JOIN races r ON r.raceId = cr.raceId JOIN circuits c ON r.circuitId = c.circuitId '
              f'WHERE cr.constructorId = {const_id} ORDER BY cr.points DESC LIMIT 10')
     
@@ -73,31 +71,15 @@ def details(constructorRef):
     cursor.execute(query)
     raceInfos = cursor.fetchall()
 
-    race_ids_query = ('SELECT cr.raceId  ' 
-                    'FROM constructor_results cr JOIN races r ON r.raceId = cr.raceId JOIN circuits c ON r.circuitId = c.circuitId '
-                    f'WHERE cr.constructorId = {const_id} ORDER BY cr.points DESC LIMIT 10')
+    detail_query = ('SELECT r.constructorId, r.raceId, d.forename, d.surname, r.position, r.points FROM results r' 
+                    ' JOIN drivers d ON r.driverId = d.driverId WHERE r.raceId IN' 
+                    ' (SELECT cr.raceId FROM constructor_results cr JOIN races r ON r.raceId = cr.raceId' 
+                    f' JOIN circuits c ON r.circuitId = c.circuitId WHERE cr.constructorId = {const_id} ORDER BY cr.points DESC LIMIT 10)' 
+                    f' AND r.constructorId = {const_id} ')
+    cursor.execute(detail_query)
+    raceResults = cursor.fetchall()
 
-    print(const_id)
-
-    cursor.execute(race_ids_query)
-    race_ids = cursor.fetchall()
-
-    #To get the raceIds that have yielded the best results
-    raceIds = ""
-    for row in race_ids:
-        for x in row:
-            raceIds = raceIds + str(x) + ", " 
-    raceIds = raceIds.rstrip(', ')
-    print(raceIds)
-
-    second_query = f"SELECT results.raceId, results.driverId, results.points, results.position FROM results WHERE constructorId = {const_id} AND raceId IN ({raceIds})"
-    print(second_query)
-    third_query = f"SELECT raceId FROM constructor_results WHERE constructorId = {const_id}"
-
-    cursor.execute(second_query)
-    race_results = cursor.fetchall()
-
-    for row in race_results:
+    for row in raceResults:
         for x in row:
             print(str(x), end=" | ")
         print("")
@@ -106,8 +88,9 @@ def details(constructorRef):
         'constructors/constructor_details.html', 
         constructorRef=constructorRef,
         const_name = const_name,
+        const_id = const_id, 
         raceInfos = raceInfos,
-        #race_results = race_results
+        raceResults = raceResults
     )
 
 @bp.route('/constructors/create', methods=('GET', 'POST'))

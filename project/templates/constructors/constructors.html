@@ -94,11 +94,11 @@
 
         <nav class="pagination-drivers">
             {% if page > 10 %}
-                <a class="previous-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page - 10 }}">Previous 10</a>
+                <a class="previous-button"  href="?filter_name={{ filter_name }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page - 10 }}">Previous 10</a>
             {% endif %}
     
             {% if page > 1 %}
-                <a class="previous-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page - 1 }}">Previous</a>
+                <a class="previous-button"  href="?filter_name={{ filter_name }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page - 1 }}">Previous</a>
 
             {% endif %}
     
@@ -110,7 +110,7 @@
 
                     <button class="current-page" disabled>{{ i }}</button>
                 {% else %}
-                    <a class="other-pages" href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ i }}">{{ i }}</a>
+                    <a class="other-pages" href="?filter_name={{ filter_name }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ i }}">{{ i }}</a>
 
                 {% endif %}
             {% endfor %}
@@ -119,15 +119,15 @@
     
             {% if results|length == RESULTS_PER_PAGE and end_page < total_pages %}
 
-                <a class="next-button" href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ end_page + 1 }}">Next 10</a>
+                <a class="next-button" href="?filter_name={{ filter_name }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ end_page + 1 }}">Next 10</a>
             {% endif %}
     
             {% if page + 10 <= total_pages %}
-                <a class="next-button" href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 10 }}">Next 10</a>
+                <a class="next-button" href="?filter_name={{ filter_name }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 10 }}">Next 10</a>
             {% endif %}
     
             {% if page < total_pages %}
-                <a class="next-button"  href="?filter_nationality={{ filter_nationality }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
+                <a class="next-button"  href="?filter_name={{ filter_name }}&nationality_dropdown={{ nationality_dropdown }}&country={{ selected_country }}&page={{ page + 1 }}">Next</a>
             {% endif %}
             {% if g.user %}
                 <button class="delete-button" type="button" onclick="deleteSelected()">Delete Selected Constructors</button>
