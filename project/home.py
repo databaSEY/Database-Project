@@ -12,7 +12,7 @@ bp = Blueprint('home', __name__)
 def index():
     db = get_db()
     top_drivers_query = (
-        'SELECT DISTINCT'
+        'SELECT '
         ' ROW_NUMBER() OVER (ORDER BY SUM(res.points) DESC) AS row_num, '
          ' d.forename, '
          ' d.surname,'

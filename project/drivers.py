@@ -26,7 +26,6 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
     # to solve the pagination problem, I checked all cases, tried to understand what is coming from the html while it's giving error
     # To understand I put this condition and saw that "None" is coming. to fix this, i put the check above
     if search_term and search_term_surname:
-        print("firsttt")
         query = (
            'SELECT d.driverId, d.driverRef, d.forename, d.surname, d.nationality'
             ' FROM drivers d '
@@ -92,35 +91,6 @@ def get_search_results(search_term, search_term_surname, drivers_per_page, offse
 
     return posts, drivers_per_page, total_drivers, distinct_nationalities, total_pages
 
-@bp.route('/drivers', methods=['GET'])
-def index():
-    # Get the current page and drivers per page from the URL parameters
-    page = request.args.get('page', default=1, type=int)
-    drivers_per_page = request.args.get('drivers_per_page', default=10, type=int)
-    search_term = request.args.get('search', '')
-    search_term_surname = request.args.get('search_surname', '')
-    nationality_filter = request.args.get('nationality', default=None)
-    offset = (page - 1) * drivers_per_page
-    
-    print(search_term_surname)
-    posts, drivers_per_page, total_drivers, distinct_nationalities, total_pages = get_search_results(search_term, 
-                                                                                        search_term_surname,
-                                                                                        drivers_per_page,
-                                                                                        offset, 
-                                                                                        nationality_filter,
-                                                                                        page
-                                                                                        )
-
-    
-    print(search_term)
-    return render_template('drivers/index.html', posts=posts,  
-                                                total_pages = total_pages, 
-                                                page=page,
-                                                drivers_per_page=drivers_per_page,
-                                                distinct_nationalities=distinct_nationalities,
-                                                selected_nationality=nationality_filter,
-                                                search_term=search_term,
-                                                search_term_surname=search_term_surname)
 
 @bp.route('/drivers/driver_details/<int:driver_id>/details')
 def driver_details(driver_id):
@@ -129,17 +99,18 @@ def driver_details(driver_id):
     name = db.execute(name_query, ).fetchone()
     print(name)
 
-    details_query = ('select  d.forename, d.surname, r.year , r.name, ds.position, ds.points, bestLap.time as time'
-            ' from drivers d'
-            ' join driver_standings ds on d.driverId = ds.driverId'
-            ' join races r on ds.raceId = r.raceId'
-            ' join ('
-            ' SELECT l.raceId, l.driverId, MIN(l.time) AS time FROM laptimes l GROUP BY l.raceId, l.driverId'
-            ' ) AS bestLap'
-            ' ON bestLap.raceId = r.raceId AND bestLap.driverId = d.driverId'
-            ' where d.driverId = ?'
-            ' order by position '
-            ' limit 10'
+    details_query = (
+        'select  d.forename, d.surname, r.year , r.name, ds.position, ds.points, bestLap.time as time'
+        ' from drivers d'
+        ' join driver_standings ds on d.driverId = ds.driverId'
+        ' join races r on ds.raceId = r.raceId'
+        ' join ('
+        ' SELECT l.raceId, l.driverId, MIN(l.time) AS time FROM laptimes l GROUP BY l.raceId, l.driverId'
+        ' ) AS bestLap'
+        ' ON bestLap.raceId = r.raceId AND bestLap.driverId = d.driverId'
+        ' where d.driverId = ?'
+        ' order by position '
+        ' limit 10'
     )
     general_info_query = (
         'SELECT '
@@ -247,5 +218,34 @@ def update():
         print('Error updating backend:', e)
         return jsonify({'error': 'Internal Server Error'}), 500
 ################################
+@bp.route('/drivers', methods=['GET'])
+def index():
+    # Get the current page and drivers per page from the URL parameters
+    page = request.args.get('page', default=1, type=int)
+    drivers_per_page = request.args.get('drivers_per_page', default=10, type=int)
+    search_term = request.args.get('search', '')
+    search_term_surname = request.args.get('search_surname', '')
+    nationality_filter = request.args.get('nationality', default=None)
+    offset = (page - 1) * drivers_per_page
+    
+    print(search_term_surname)
+    posts, drivers_per_page, total_drivers, distinct_nationalities, total_pages = get_search_results(search_term, 
+                                                                                        search_term_surname,
+                                                                                        drivers_per_page,
+                                                                                        offset, 
+                                                                                        nationality_filter,
+                                                                                        page
+                                                                                        )
+
+    
+    print(search_term)
+    return render_template('drivers/index.html', posts=posts,  
+                                                total_pages = total_pages, 
+                                                page=page,
+                                                drivers_per_page=drivers_per_page,
+                                                distinct_nationalities=distinct_nationalities,
+                                                selected_nationality=nationality_filter,
+                                                search_term=search_term,
+                                                search_term_surname=search_term_surname)
 
 
