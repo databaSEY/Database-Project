@@ -23,15 +23,14 @@ CREATE TABLE constructor_standings (
     points INTEGER, 
     position INTEGER, 
     positionText VARCHAR, 
-    wins INTEGER, ""
+    wins INTEGER
 )
-CREATE TABLE constructors (
-    constructorId, 
-    constructorRef, 
-    name, 
-    nationality, 
-    url,
-    ""
+CREATE TABLE "constructors" (
+    constructorId INTEGER PRIMARY KEY, 
+    constructorRef VARCHAR, 
+    name VARCHAR, 
+    nationality VARCHAR, 
+    url VARCHAR
 )
 CREATE TABLE driver_standings (
     driverStandingsId INTEGER PRIMARY KEY, 
