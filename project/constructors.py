@@ -35,7 +35,6 @@ def index():
 
     query = base_query + f" LIMIT {RESULTS_PER_PAGE} OFFSET {offset}"
     
-    print(query)
     cursor.execute(query)
     constructors = cursor.fetchall()
 
@@ -78,11 +77,6 @@ def details(constructorRef):
                     f' AND r.constructorId = {const_id} ')
     cursor.execute(detail_query)
     raceResults = cursor.fetchall()
-
-    for row in raceResults:
-        for x in row:
-            print(str(x), end=" | ")
-        print("")
 
     return render_template(
         'constructors/constructor_details.html', 
@@ -153,11 +147,7 @@ def update():
 def delete():
     if request.method == 'DELETE':
         try:
-            print("bfkdfn")
             constructorIds = request.json.get('constructorIds', [])
-            if constructorIds:
-                for const_id in constructorIds:
-                    print(const_id)
             db = get_db()
             query = f'DELETE FROM constructors WHERE constructorId in ("'
             for const_id in constructorIds:
@@ -165,7 +155,6 @@ def delete():
                     query += '", "'
                 query += f"{const_id}"
             query += '")'
-            print(query)
             db.execute(query, )
             db.commit()
 
