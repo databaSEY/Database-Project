@@ -1,54 +1,25 @@
-# Database-Project
-23 Güz Dönemi BLG 317 Database Projesi İçin
-## How to run
+# Motorsports Database Mnagement System 
+This project is developed by:
+[Eda Işık](https://github.com/isikeda)
+[Semih Gençten](https://github.com/semihgencten)
+[Yasin İbiş](https://github.com/yasinibis)
+for Database Course BLG317E
+
+Welcome to our Flask-based web application for the Database class! Our project represents a comprehensive system designed to seamlessly integrate SQL functionality, catering to the management of information related to drivers, constructors, and races in the exciting realm of motorsports.
+
+## Project Overview 
+The user interface of our application offers dynamic pages for each category, providing users with an immersive experience for efficient search operations and access to detailed information on individual drivers, constructors, and races. With a user-friendly design, our application empowers users to effortlessly explore and analyze motorsports data.
+
+##  How to run
+When you install the required libraires as shown in reauirements.txt you can use the following command to run the project: 
 flask --app project run --debug
 
-Şu an sadece drivers.py dosyası sayesinde "http://127.0.0.1:5000/drivers" benzeri url ye gidince tabloyu bastırıyor.
-
-main.py dosyası kullanılmayacak, flask olmadan veritabanını test etmek istersek diye onu da silmedim.
-
-### Drivers
-#### CRUD
-Create, Update, Delete işlemlerini gerçekleştiriyor.
-İşlemler doğru gerçekleşiyor fakat kullanıcı deneyimi çok da iyi değil. Bazı ufak eksikler var. 
-Mesela update ettikten sonra tekrar search yapman gerekiyor ki yeni halini görebilesin.
-Ama zamanımız az kaldı ve bunlar veritabanı ile alakasız konular.
-
-#### Details
-Satırın üstüne basınca details sayfasına gidiyor. Yasin'in yaptığı gibi aynı sayfada satırın altında açılan bir şey yapmadım henüz.
-Yapıp yapmama konusunda kararsızım.
-#### Profile sayfası
-Zamanımız az kaldığı için bu olayı pas geçme ihtimalimizi güçlü görüyorum.
-#### Login Register
-Bu kısmı yapacağım, hazır halleri var, uzun sürmez
-
-## admin table
-CREATE TABLE admin (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
-);
-
-INSERT INTO admin values (
-1,
-'semihgencten',
-'test'
-)
-
-## Log in for admin:
-Eğer elinizdeki Formula1.sqlite instance'ında admin tablosu oluşmamışsa yukarıdaki sql sorgusuyla tabloyu oluşturup kullanıcı ekleyebilirsiniz.
-Register sayfası oluşturmadım çünkü bu sadece adminler için, her isteyen register olsa adminliğin anlamı kalmaz.
-Eğer log in olmuşsa Welcome username şekline sağ üstte adı görünüyor ve yanında logout görünüyor. Log in olmamışsa log in görünüyor.
+Then you can go to the link which is printed on terminal.
 
 
+### Home page 
+![Home Page](https://github.com/databaSEY/Database-Project/images/home_page)
+This is our home page, it presents a brief information about core entities of our database.
+As you can see admin can make Log In and Log Out operations to make sensitive Create, Update and Delete operations.
 
-## Base html 
-kendi sayfamı ve edanın sayfasını base den extend ettim fakat yasin'in sayfasında denediğimde düzgün olmadı. Kullandığı css den dolayı.
-Kendisime bırakıyorum o kısmı
 
-# Create update delete işlemleri için login required
-@login_required ı fonksiyonun başına koyarak sadece log in olmuşsa fonksiyonun çalışmasını sağlayabilirsiniz
-Fakat edit create butonlarının login olmamışsa görünmemesi için:
-Burada basit bir şey yaparak bunu sağlayabiliyoruz. templates/drivers/index sayfasına giderseniz en altta create için yazdığım formun başında ve sonundaki
-  {% if g.user %}{% endif %}
-ifadelerini görebilirsiniz. Bunlar sayesinde içindeki kısımlar sadece kullanıcı giriş yapmışsa render ediliyor ve basitçe istediğimiz özelliği elde etmiş oluyoruz.
