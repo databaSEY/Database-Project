@@ -21,10 +21,10 @@ Then you can go to the link which is printed on terminal.
 
 ### Home page 
 <div align="center">
-  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/home_page.png" alt="Logo">
+  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/home_page.png" alt="home">
   <p>Home Page</p>
 </div>
-![Home Page](https://github.com/databaSEY/Database-Project/blob/main/images/home_page.png)
+
 This is our home page, it presents a brief information about core entities of our database.
 As you can see admin can make Log In and Log Out operations to make sensitive Create, Update and Delete operations.
 
@@ -34,9 +34,21 @@ They also allows admin to create new records, update existing ones and delete th
 There are also seperate detials pages for drivers and constructor pages to show detailed information about related entities.
 Details of races are shown by a elegant design with an extendible part.
 
-![Constructor Page](https://github.com/databaSEY/Database-Project/blob/main/images/constructors.png)
-![Driver Page Create](https://github.com/databaSEY/Database-Project/blob/main/images/driver_page_create.png)
-![Races Page](https://github.com/databaSEY/Database-Project/blob/main/images/races.png)
+<div align="center">
+  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/constructors.png" alt="Constructor">
+  <p>Constructor Page</p>
+</div>
+
+<div align="center">
+  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/driver_page_create.png" alt="Driver Page Create Section at the Bottom">
+  <p>Constructor Page</p>
+</div>
+
+<div align="center">
+  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/races.png" alt="Races">
+  <p>Races page with details Page</p>
+</div>
+
 
 
 
