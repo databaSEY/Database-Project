@@ -39,16 +39,22 @@ Details of races are shown by a elegant design with an extendible part.
   <p>Constructor Page</p>
 </div>
 
+Allows the user to search by name, filter by nationality. Also implements pagination for an easy to use interface.  
+
+
 <div align="center">
-  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/driver_page_create.png" alt="Driver Page Create Section at the Bottom">
-  <p>Constructor Page</p>
+  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/driver_page_create.png" alt="driver">
+  <p>Driver Page's Create Section at the Bottom</p>
 </div>
+
+When the admin is logged in, she can make Create, Update and Delete operations on all of the pages.
 
 <div align="center">
   <img src="https://github.com/databaSEY/Database-Project/blob/main/images/races.png" alt="Races">
-  <p>Races page with details Page</p>
+  <p>Races page with details Part</p>
 </div>
 
+Shows the details of races with an elegant design.
 
 
 
