@@ -20,6 +20,10 @@ Then you can go to the link which is printed on terminal.
 
 
 ### Home page 
+<div align="center">
+  <img src="https://github.com/databaSEY/Database-Project/blob/main/images/home_page.png" alt="Logo">
+  <p>Home Page</p>
+</div>
 ![Home Page](https://github.com/databaSEY/Database-Project/blob/main/images/home_page.png)
 This is our home page, it presents a brief information about core entities of our database.
 As you can see admin can make Log In and Log Out operations to make sensitive Create, Update and Delete operations.
